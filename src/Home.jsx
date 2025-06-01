@@ -7,7 +7,6 @@ function Home() {
 
 return (
   <>
-  <Header />
  <CarouselComponent />
  <AnnouncementSection />
  <h1 style={{margin: "120px auto", fontSize: "43px", textAlign: "center", fontFamily: "monospace"}}>Game Banayega Name</h1>

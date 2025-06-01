@@ -12,8 +12,32 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Promotions', 'Profile', 'Recharge' ];
-const settings = ['Profile', 'Promotions','Customer Service', 'Logout'];
+import { NavLink } from 'react-router';
+
+const pages = [
+  {
+    name: 'Promotions',
+    url: 'promotions'
+
+  },
+  {
+    name: 'Profile',
+    url: 'profile'
+  },
+  {
+    name: 'Recharge',
+    url: 'recharge'
+  }
+];
+
+const settings = [
+  {
+    name: 'Customer Service', 
+    url: 'customer-service'},
+  {
+    name: 'Logout', 
+    url: 'login'}
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -52,7 +76,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="#app"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -94,8 +118,11 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <NavLink 
+                    to={`/${page.url}`}
+                    style={{textDecoration: 'none', color:'black'}}
+                  >{page.name}</NavLink>
                 </MenuItem>
               ))}
             </Menu>
@@ -104,7 +131,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="#app"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -121,11 +148,15 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.name}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, display: 'block' }}
               >
-                {page}
+                <NavLink 
+                  to={`/${page.url}`}
+                  style={{textDecoration: 'none', color:'white'}}
+                
+                >{page.name}</NavLink>
               </Button>
             ))}
           </Box>
@@ -152,8 +183,11 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                  <NavLink 
+                    to={`/${setting.url}`}
+                    style={{textDecoration: 'none', color:'black'}}
+                  >{setting.name}</NavLink>
                 </MenuItem>
               ))}
             </Menu>
