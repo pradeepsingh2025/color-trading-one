@@ -17,26 +17,27 @@ import { NavLink } from 'react-router';
 const pages = [
   {
     name: 'Promotions',
-    url: 'promotions'
+    url: '/promotions'
 
   },
   {
     name: 'Profile',
-    url: 'profile'
+    url: '/profile'
   },
   {
     name: 'Recharge',
-    url: 'recharge'
+    url: '/recharge'
   }
 ];
 
 const settings = [
   {
     name: 'Customer Service', 
-    url: 'customer-service'},
+    url: '/customer-service'
+  },
   {
     name: 'Logout', 
-    url: 'login'}
+    url: '/login'}
 ];
 
 function ResponsiveAppBar() {
@@ -62,13 +63,13 @@ function ResponsiveAppBar() {
     <AppBar 
       position="sticky"
       sx={{
-        backgroundColor: "#F79B72"
+        backgroundColor: "#2A4759"
       }}
     >
       <Container 
         maxWidth="md"
         sx={{
-          color: "#2A4759"
+          color: "#F79B72"
         }}
       >
         <Toolbar disableGutters>
@@ -76,7 +77,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -120,7 +121,7 @@ function ResponsiveAppBar() {
               {pages.map((page) => (
                 <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                   <NavLink 
-                    to={`/${page.url}`}
+                    to={page.url}
                     style={{textDecoration: 'none', color:'black'}}
                   >{page.name}</NavLink>
                 </MenuItem>
@@ -131,7 +132,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -153,7 +154,7 @@ function ResponsiveAppBar() {
                 sx={{ my: 2, display: 'block' }}
               >
                 <NavLink 
-                  to={`/${page.url}`}
+                  to={page.url}
                   style={{textDecoration: 'none', color:'white'}}
                 
                 >{page.name}</NavLink>
@@ -185,8 +186,8 @@ function ResponsiveAppBar() {
               {settings.map((setting) => (
                 <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
                   <NavLink 
-                    to={`/${setting.url}`}
-                    style={{textDecoration: 'none', color:'black'}}
+                    to={setting.url}
+                    style={{textDecoration: 'none', color:'black', width: '100%'}}
                   >{setting.name}</NavLink>
                 </MenuItem>
               ))}

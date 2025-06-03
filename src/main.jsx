@@ -5,13 +5,14 @@ import {
 
 import Home from "./Home";
 import Layout from "./Layout";
+import './index.css'
 
 import CustomerService from "./pages/CustomerService/CustomerService";
-import Login from "./pages/Login/Login";
+import LoginPage from "./pages/Login/Login";
 import Profile from "./pages/Profile/Profile";
 import Promotions from "./pages/Promotions/Promotions";
 import Recharge from "./pages/Recharge/Recharge";
-import Signup from "./pages/Signup/Signup";
+import SignupPage from "./pages/Signup/Signup";
 
 import ReactDOM from "react-dom/client";
 
@@ -29,10 +30,6 @@ const router = createBrowserRouter([
         element: <CustomerService />
       },
       {
-        path: '/login',
-        element: <Login />
-      },
-      {
         path: '/profile',
         element: <Profile />
       },
@@ -44,12 +41,15 @@ const router = createBrowserRouter([
         path: '/recharge',
         element: <Recharge />
       },
-      {
-        path: '/signup',
-        element: <Signup />
-      },
-      
     ]
+  },
+  {
+    path: '/login',
+    element: <LoginPage />
+  },
+  {
+        path: '/signup',
+        element: <SignupPage />
   },
 ]);
 

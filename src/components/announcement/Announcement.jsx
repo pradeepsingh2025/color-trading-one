@@ -8,7 +8,7 @@ export default function AnnouncementSection() {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: '#DDDDDD',
+        backgroundColor: '#2A4759',
         maxWidth: "600px",
         padding: '12px 16px',
         borderRadius: '8px',
@@ -20,7 +20,7 @@ export default function AnnouncementSection() {
       {/* Speaker Icon */}
       <VolumeUpIcon 
         sx={{ 
-          color: '#1976d2',
+          color: 'white',
           fontSize: '24px',
           flexShrink: 0
         }} 
@@ -31,12 +31,12 @@ export default function AnnouncementSection() {
         variant="body2"
         sx={{
           flex: 1,
-          color: '#333',
+          color: 'white',
           fontSize: '14px',
           lineHeight: 1
         }}
       >
-        Welcome to SIKKIM game platform, we will serve you wholeheartedly!
+        Welcome to 68lottery game platform, we will serve you wholeheartedly!
       </Typography>
      
     </Box>
