@@ -10,6 +10,7 @@ export default function AnnouncementSection() {
         alignItems: 'center',
         backgroundColor: '#2A4759',
         maxWidth: "600px",
+        width: '80%',
         padding: '12px 16px',
         borderRadius: '8px',
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)',

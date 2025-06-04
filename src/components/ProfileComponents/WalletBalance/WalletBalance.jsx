@@ -111,7 +111,7 @@ const WalletBalance = ({
             }}
           >
              <NavLink
-              to='/recharge'
+              to='/withdraw'
               style={{
                 textDecoration: 'none',
                 display: 'flex',

@@ -66,7 +66,7 @@ const CarouselComponent = () => {
     <Box
       sx={{
         position: 'relative',
-        width: '100%',
+        width: '90%',
         maxWidth: '1000px',
         margin: '36px auto',
         borderRadius: 2,

@@ -14,6 +14,7 @@ import Promotions from "./pages/Promotions/Promotions";
 import Recharge from "./pages/Recharge/Recharge";
 import SignupPage from "./pages/Signup/Signup";
 import PaymentPage from "./pages/PaymentPage/PaymentPage";
+import Withdraw from "./pages/Withdraw/Withdraw";
 
 import ReactDOM from "react-dom/client";
 
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: '/payment-page',
         element: <PaymentPage />,
+      },
+      {
+        path: '/withdraw',
+        element: <Withdraw />,
       },
     ]
   },
