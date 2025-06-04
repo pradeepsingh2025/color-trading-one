@@ -13,6 +13,7 @@ import Profile from "./pages/Profile/Profile";
 import Promotions from "./pages/Promotions/Promotions";
 import Recharge from "./pages/Recharge/Recharge";
 import SignupPage from "./pages/Signup/Signup";
+import PaymentPage from "./pages/PaymentPage/PaymentPage";
 
 import ReactDOM from "react-dom/client";
 
@@ -39,7 +40,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/recharge',
-        element: <Recharge />
+        element: <Recharge />,
+      },
+      {
+        path: '/payment-page',
+        element: <PaymentPage />,
       },
     ]
   },
@@ -48,8 +53,8 @@ const router = createBrowserRouter([
     element: <LoginPage />
   },
   {
-        path: '/signup',
-        element: <SignupPage />
+    path: '/signup',
+    element: <SignupPage />
   },
 ]);
 

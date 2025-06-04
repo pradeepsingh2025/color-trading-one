@@ -16,7 +16,9 @@ import {
   VisibilityOff
 } from '@mui/icons-material';
 
-const WalletBalance = ({ 
+import { NavLink } from 'react-router';
+
+const WalletBalance = ({
   balance = "₹0.66",
   onDeposit,
   onWithdraw
@@ -42,10 +44,10 @@ const WalletBalance = ({
             {showBalance ? <VisibilityOff /> : <Visibility />}
           </IconButton>
         </Box>
-        
-        <Typography 
-          variant="h3" 
-          sx={{ 
+
+        <Typography
+          variant="h3"
+          sx={{
             fontWeight: 700,
             mb: 3,
             background: 'linear-gradient(45deg, #667eea, #764ba2)',
@@ -62,11 +64,10 @@ const WalletBalance = ({
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             variant="contained"
-            startIcon={<Download />}
             fullWidth
             onClick={onDeposit}
             sx={{
-              py: 1.5,
+              py: 1,
               borderRadius: 2,
               textTransform: 'none',
               fontWeight: 500,
@@ -78,11 +79,24 @@ const WalletBalance = ({
               }
             }}
           >
-            Deposit
+            <NavLink
+              to='/recharge'
+              style={{
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 2,
+                color: 'white',
+                width: '100%'
+              }}
+            >
+              <Download />
+              Deposit
+            </NavLink>
           </Button>
           <Button
             variant="outlined"
-            startIcon={<Upload />}
             fullWidth
             onClick={onWithdraw}
             sx={{
@@ -96,11 +110,25 @@ const WalletBalance = ({
               }
             }}
           >
-            Withdraw
+             <NavLink
+              to='/recharge'
+              style={{
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 2,
+                color: 'black',
+                width: '100%'
+              }}
+            >
+              <Upload />
+              Withdraw
+            </NavLink>
           </Button>
         </Box>
       </CardContent>
     </Card>
   );
 };
- export default WalletBalance;
+export default WalletBalance;

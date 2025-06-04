@@ -53,7 +53,7 @@ const ProfileHeader = ({
                         }}
                     />
                     <Box sx={{ flex: 1 }}>
-                        <Typography variant="h5" sx={{ fontWeight: 500, mb: 1 }}>
+                        <Typography variant="h5" sx={{ fontWeight: 500, mb: 1, fontSize: '0.875rem' }}>
                             {username}
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>

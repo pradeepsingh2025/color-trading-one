@@ -117,6 +117,7 @@ const ProfileDashboard = () => {
                       color: 'white', 
                       opacity: 0.8,
                       '&:hover': { 
+                        
                         opacity: 1,
                         backgroundColor: 'rgba(255,255,255,0.1)'
                       }
