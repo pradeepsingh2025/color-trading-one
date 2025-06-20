@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router';
+import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Card,
@@ -11,35 +12,56 @@ import {
   InputAdornment,
   IconButton,
   Alert,
-  Divider
-} from '@mui/material';
+  Divider,
+} from "@mui/material";
 import {
   Visibility,
   VisibilityOff,
   Phone,
   Lock,
-  Login as LoginIcon
-} from '@mui/icons-material';
+  Login as LoginIcon,
+} from "@mui/icons-material";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    phoneNumber: '',
-    password: ''
+    phoneNumber: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+
+  // Redirect if already logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        if (payload.exp > Date.now() / 1000) {
+          navigate("/");
+        } else {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+        }
+      } catch {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      }
+    }
+  }, [navigate]);
 
   const handleInputChange = (field) => (event) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: event.target.value
+      [field]: event.target.value,
     }));
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [field]: ''
+        [field]: "",
       }));
     }
   };
@@ -49,16 +71,16 @@ export default function LoginPage() {
 
     // Phone number validation
     if (!formData.phoneNumber.trim()) {
-      newErrors.phoneNumber = 'Phone number is required';
+      newErrors.phoneNumber = "Phone number is required";
     } else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(formData.phoneNumber.trim())) {
-      newErrors.phoneNumber = 'Please enter a valid phone number';
+      newErrors.phoneNumber = "Please enter a valid phone number";
     }
 
     // Password validation
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     setErrors(newErrors);
@@ -74,62 +96,97 @@ export default function LoginPage() {
 
     // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      alert('Login successful! (Demo)');
+      const response = await fetch("http://localhost:3001/api/user/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: formData.phoneNumber,
+          password: formData.password,
+        }),
+      });
+
+      const { data, error } = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        navigate("/", { state: data.user });
+        console.log(data);
+      } else {
+        console.log(error)
+        setSubmitMessage(
+          error || "Error login. Please try again."
+        );
+      }
     } catch (error) {
-      alert('Login failed. Please try again.');
+      setErrors("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleForgotPassword = () => {
-    alert('Forgot password functionality would redirect to password reset page');
+    alert(
+      "Forgot password functionality would redirect to password reset page"
+    );
   };
 
-  const handleSignUp = () => {
-    alert('Sign up functionality would redirect to registration page');
-  };
+  const keywords = ["error", "not", "Invalid", "required"];
 
   return (
     <Box
       sx={{
-        minHeight: '90vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        backgroundColor: 'white',
+        minHeight: "90vh",
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "space-evenly",
+        backgroundColor: "white",
         padding: 2,
       }}
     >
       <Card
         sx={{
           maxWidth: 400,
-          width: '100%',
+          width: "100%",
           boxShadow: 0,
-
         }}
       >
         <CardContent>
-          <NavLink
-            to='/'
+          <Typography
+            component="h1"
+            variant="h1"
             style={{
-              textAlign: 'center',
-              fontSize: '53px',
-              fontFamily: 'monospace',
+              textAlign: "start",
+              fontSize: "4vmax",
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.1rem',
-              color: '#F79B72',
-              textDecoration: 'none',
+              letterSpacing: ".1rem",
+              color: "#F79B72",
+              textDecoration: "none",
             }}
-          >68LOTTERY</NavLink>
-          <Typography component='h1' variant='h6'>A betting platform.</Typography>
-          <Typography component='h1' variant='h4' fontSize='43px' sx={{ marginTop: '40px', color: '#2A4759' }}>Know your limits.</Typography>
-          <Typography component='h1' variant='h4' fontSize='23px' sx={{ color: '#2A4759' }}>Bet responsibly.</Typography>
-          <NavLink
-            to='/customer-service'
-            style={{marginTop: '30px'}}
           >
+            68LOTTERY
+          </Typography>
+          <Typography component="h1" variant="h6">
+            A betting platform.
+          </Typography>
+          <Typography
+            component="h1"
+            variant="h4"
+            fontSize="5vmax"
+            sx={{ marginTop: "3vh", color: "#2A4759" }}
+          >
+            Know your limits.
+          </Typography>
+          <Typography
+            component="h1"
+            variant="h4"
+            fontSize="3vmax"
+            sx={{ color: "#2A4759" }}
+          >
+            Bet responsibly.
+          </Typography>
+          <NavLink to="/customer-service" style={{ marginTop: "30px" }}>
             customer service
           </NavLink>
         </CardContent>
@@ -137,7 +194,7 @@ export default function LoginPage() {
       <Card
         sx={{
           maxWidth: 400,
-          width: '100%',
+          width: "100%",
           boxShadow: 3,
           borderRadius: 2,
           // marginRight: 40
@@ -145,14 +202,28 @@ export default function LoginPage() {
       >
         <CardContent sx={{ padding: 4 }}>
           {/* Header */}
-          <Box sx={{ textAlign: 'center', mb: 3 }}>
-            <LoginIcon sx={{ fontSize: 42, color: '#2A4759', mb: 1 }} />
-            <Typography variant="h5" component="h1" gutterBottom fontWeight="bold">
+          <Box sx={{ textAlign: "center", mb: 3 }}>
+            <LoginIcon sx={{ fontSize: 42, color: "#2A4759", mb: 1 }} />
+            <Typography
+              variant="h5"
+              component="h1"
+              gutterBottom
+              fontWeight="bold"
+            >
               Welcome Back
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Please sign in to your account
-            </Typography>
+            {submitMessage ? (
+              <Alert
+                severity='error'
+                sx={{ mb: 2 }}
+              >
+                {submitMessage}
+              </Alert>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                Please sign in to your account
+              </Typography>
+            )}
           </Box>
 
           {/* Login Form */}
@@ -163,10 +234,10 @@ export default function LoginPage() {
               label="Phone Number"
               variant="outlined"
               value={formData.phoneNumber}
-              onChange={handleInputChange('phoneNumber')}
+              onChange={handleInputChange("phoneNumber")}
               error={!!errors.phoneNumber}
               helperText={errors.phoneNumber}
-              placeholder="+91 9214266534"
+              placeholder="9214266534"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -181,13 +252,13 @@ export default function LoginPage() {
             <TextField
               fullWidth
               label="Password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               value={formData.password}
-              onChange={handleInputChange('password')}
+              onChange={handleInputChange("password")}
               error={!!errors.password}
               helperText={errors.password}
-              placeholder='&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;'
+              placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -210,11 +281,8 @@ export default function LoginPage() {
             />
 
             {/* Forgot Password Link */}
-            <Box sx={{ textAlign: 'right', mb: 3 }}>
-              <NavLink
-                to='/forgotpassword'
-                style={{textDecoration: 'none'}}
-              >
+            <Box sx={{ textAlign: "right", mb: 3 }}>
+              <NavLink to="/forgotpassword" style={{ textDecoration: "none" }}>
                 Forgot Password?
               </NavLink>
             </Box>
@@ -229,13 +297,13 @@ export default function LoginPage() {
               sx={{
                 py: 1.5,
                 mb: 2,
-                textTransform: 'none',
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                backgroundColor: '#2A4759'
+                textTransform: "none",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                backgroundColor: "#2A4759",
               }}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
 
             {/* Divider */}
@@ -246,13 +314,11 @@ export default function LoginPage() {
             </Divider>
 
             {/* Sign Up Section */}
-            <Box sx={{ textAlign: 'center' }}>
+            <Box sx={{ textAlign: "center" }}>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                 Don't have an account?
               </Typography>
-              <NavLink
-                to='/signup'
-              >Create Account</NavLink>
+              <NavLink to="/signup">Create Account</NavLink>
             </Box>
           </Box>
         </CardContent>

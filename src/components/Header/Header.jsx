@@ -1,43 +1,39 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
 
-import { NavLink } from 'react-router';
+import { NavLink } from "react-router";
 
 const pages = [
   {
-    name: 'Promotions',
-    url: '/promotions'
-
+    name: "Promotions",
+    url: "/promotions",
   },
   {
-    name: 'Profile',
-    url: '/profile'
+    name: "Recharge",
+    url: "/recharge",
   },
-  {
-    name: 'Recharge',
-    url: '/recharge'
-  }
 ];
 
 const settings = [
   {
-    name: 'Customer Service', 
-    url: '/customer-service'
+    name: "Customer Service",
+    url: "/customer-service",
   },
   {
-    name: 'Logout', 
-    url: '/login'}
+    name: "Profile",
+    url: "/profile",
+  },
 ];
 
 function ResponsiveAppBar() {
@@ -60,16 +56,16 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar 
+    <AppBar
       position="sticky"
       sx={{
-        backgroundColor: "#2A4759"
+        backgroundColor: "#2A4759",
       }}
     >
-      <Container 
+      <Container
         maxWidth="md"
         sx={{
-          color: "#F79B72"
+          color: "#F79B72",
         }}
       >
         <Toolbar disableGutters>
@@ -80,18 +76,18 @@ function ResponsiveAppBar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.1rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".1rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             68LOTTERY
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="Large"
               aria-label="account of current user"
@@ -106,24 +102,26 @@ function ResponsiveAppBar() {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
+              sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
                 <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                  <NavLink 
+                  <NavLink
                     to={page.url}
-                    style={{textDecoration: 'none', color:'black'}}
-                  >{page.name}</NavLink>
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    {page.name}
+                  </NavLink>
                 </MenuItem>
               ))}
             </Menu>
@@ -135,29 +133,30 @@ function ResponsiveAppBar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.05rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".05rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             68LOTTERY
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page.name}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, display: 'block' }}
+                sx={{ my: 2, display: "block" }}
               >
-                <NavLink 
+                <NavLink
                   to={page.url}
-                  style={{textDecoration: 'none', color:'white'}}
-                
-                >{page.name}</NavLink>
+                  style={{ textDecoration: "none", color: "white" }}
+                >
+                  {page.name}
+                </NavLink>
               </Button>
             ))}
           </Box>
@@ -168,27 +167,33 @@ function ResponsiveAppBar() {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
                 <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                  <NavLink 
+                  <NavLink
                     to={setting.url}
-                    style={{textDecoration: 'none', color:'black', width: '100%'}}
-                  >{setting.name}</NavLink>
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                      width: "100%",
+                    }}
+                  >
+                    {setting.name}
+                  </NavLink>
                 </MenuItem>
               ))}
             </Menu>

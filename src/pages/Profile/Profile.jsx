@@ -7,6 +7,8 @@ import Histories from '../../components/ProfileComponents/DifferentHistories/Dif
 import NotificationCard from '../../components/ProfileComponents/Notifications/Notifications';
 import LogoutButton from '../../components/ProfileComponents/LogoutButton/LogoutButton';
 
+import { useNavigate } from 'react-router';
+
 const Profile = ({
   // Profile Header Props
   username = "MEMBERNNGGN9NP",
@@ -26,8 +28,9 @@ const Profile = ({
   onWithdraw,
   onMenuItemClick,
   onNotificationClick,
-  onLogout
 }) => {
+
+  const navigate = useNavigate()
   
   const handleDeposit = () => {
     if (onDeposit) onDeposit();
@@ -45,8 +48,10 @@ const Profile = ({
     if (onNotificationClick) onNotificationClick();
   };
 
-   const handleLogout = () => {
-    if (onLogout) onLogout();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
   };
 
   return (
