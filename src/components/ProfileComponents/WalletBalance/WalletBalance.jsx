@@ -19,7 +19,7 @@ import {
 import { NavLink } from 'react-router';
 
 const WalletBalance = ({
-  balance = "₹0.66",
+  balance,
   onDeposit,
   onWithdraw
 }) => {
@@ -57,7 +57,7 @@ const WalletBalance = ({
             letterSpacing: '-1px'
           }}
         >
-          {showBalance ? balance : '₹***'}
+          {showBalance ? `₹${balance}` : '₹***'}
         </Typography>
 
         {/* Action Buttons */}

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import {
   Box,
   Card,
@@ -10,27 +11,36 @@ import {
   IconButton,
   Alert,
   Container,
-  Paper
-} from '@mui/material';
+  Paper,
+} from "@mui/material";
 import {
   ContentCopy as CopyIcon,
-  QrCode as QrCodeIcon
-} from '@mui/icons-material';
+  QrCode as QrCodeIcon,
+} from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router";
 
 const PaymentPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const paymentDetails = location.state;
+
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
-  const [utrNumber, setUtrNumber] = useState('');
+  const [utrNumber, setUtrNumber] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const timerRef = useRef(null);
 
-  const upiId = 'merchant@paytm';
-  const amountToPay = 200;
+  const upiId = paymentDetails.channel;
+  const amountToPay = paymentDetails.amount;
 
   // Timer countdown
   useEffect(() => {
     if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
+      timerRef.current = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timerRef.current);
+    } else {
+      alert("Time up!, Redirecting to recharge page");
+      navigate("/recharge", { state: "Will update soon" });
     }
   }, [timeLeft]);
 
@@ -38,12 +48,14 @@ const PaymentPage = () => {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   // Handle UTR input change
   const handleUtrChange = (event) => {
-    const value = event.target.value.replace(/\D/g, ''); // Only allow digits
+    const value = event.target.value.replace(/\D/g, ""); // Only allow digits
     if (value.length <= 12) {
       setUtrNumber(value);
     }
@@ -56,15 +68,36 @@ const PaymentPage = () => {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {
-      console.error('Failed to copy: ', err);
+      console.error("Failed to copy: ", err);
     }
   };
 
   // Handle submit
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current); // Stop the timer
+    }
     setShowSuccessMessage(true);
-    setUtrNumber('');
-    setTimeout(() => setShowSuccessMessage(false), 10000);
+    setUtrNumber("");
+
+    try {
+      const response = await fetch("http://localhost:3001/api/user/deposit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: amountToPay,
+          utrNumber: utrNumber,
+          channel: upiId
+        }),
+      });
+    } catch (error) {}
+
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+      navigate("/recharge");
+    }, 10000);
   };
 
   // Check if UTR is valid (12 digits)
@@ -74,56 +107,70 @@ const PaymentPage = () => {
     <Container maxWidth="sm" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
         {/* Amount and Timer Section */}
-        <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+        <Box sx={{ textAlign: "center", mb: 3 }}>
+          <Typography
+            variant="h5"
+            sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}
+          >
             Amount to pay: ₹{amountToPay}
           </Typography>
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              color: timeLeft < 60 ? 'error.main' : 'text.secondary',
-              fontWeight: 'medium'
+          <Typography
+            variant="h6"
+            sx={{
+              color: timeLeft < 60 ? "error.main" : "text.secondary",
+              fontWeight: "medium",
             }}
           >
             Time remaining: {formatTime(timeLeft)}
+          </Typography>
+          <Typography sx={{ color: "red", fontWeight: "large" }}>
+            Don't press back
           </Typography>
         </Box>
 
         {/* QR Code Section */}
         <Card sx={{ mb: 3 }}>
-          <CardContent sx={{ textAlign: 'center' }}>
-            <Box 
-              sx={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center',
+          <CardContent sx={{ textAlign: "center" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
                 height: 200,
-                backgroundColor: 'grey.100',
+                backgroundColor: "grey.100",
                 borderRadius: 1,
-                mb: 2
+                mb: 2,
               }}
             >
-              <QrCodeIcon sx={{ fontSize: 120, color: 'grey.600' }} />
+              <QRCodeSVG
+                value={`upi://pay?pa=${upiId}&pn=Merchant&am=${amountToPay}`}
+                size={150}
+              />
+              {/* <QrCodeIcon sx={{ fontSize: 120, color: 'grey.600' }} /> */}
             </Box>
-            <Typography variant="body2" color="error" sx={{ fontWeight: 'medium' }}>
+            <Typography
+              variant="body2"
+              color="error"
+              sx={{ fontWeight: "medium" }}
+            >
               Do not use same QR to pay multiple times
             </Typography>
           </CardContent>
         </Card>
 
         {/* OR Divider */}
-        <Box sx={{ position: 'relative', mb: 3 }}>
+        <Box sx={{ position: "relative", mb: 3 }}>
           <Divider />
           <Typography
             variant="body2"
             sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: 'background.paper',
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "background.paper",
               px: 2,
-              color: 'text.secondary'
+              color: "text.secondary",
             }}
           >
             OR
@@ -132,22 +179,25 @@ const PaymentPage = () => {
 
         {/* UPI ID Section */}
         <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'medium' }}>
+          <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: "medium" }}>
             UPI ID
           </Typography>
-          <Box 
-            sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              backgroundColor: 'grey.50',
-              border: '1px solid',
-              borderColor: 'grey.300',
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "grey.50",
+              border: "1px solid",
+              borderColor: "grey.300",
               borderRadius: 1,
               px: 2,
-              py: 1
+              py: 1,
             }}
           >
-            <Typography variant="body1" sx={{ flexGrow: 1, fontFamily: 'monospace' }}>
+            <Typography
+              variant="body1"
+              sx={{ flexGrow: 1, fontFamily: "monospace" }}
+            >
               {upiId}
             </Typography>
             <IconButton onClick={handleCopyUpiId} size="small" color="primary">
@@ -155,7 +205,11 @@ const PaymentPage = () => {
             </IconButton>
           </Box>
           {copySuccess && (
-            <Typography variant="caption" color="success.main" sx={{ mt: 1, display: 'block' }}>
+            <Typography
+              variant="caption"
+              color="success.main"
+              sx={{ mt: 1, display: "block" }}
+            >
               UPI ID copied to clipboard!
             </Typography>
           )}
@@ -168,15 +222,15 @@ const PaymentPage = () => {
         <Box sx={{ mb: 3 }}>
           <TextField
             fullWidth
-            label="Enter 12 digit UTR number"
+            label="Enter 12 digit UTR (UPI Ref) number"
             value={utrNumber}
             onChange={handleUtrChange}
-            placeholder="123456789012"
+            placeholder="823456789012"
             helperText={`${utrNumber.length}/12 digits`}
-            inputProps={{ 
+            inputProps={{
               maxLength: 12,
-              pattern: '[0-9]*',
-              inputMode: 'numeric'
+              pattern: "[0-9]*",
+              inputMode: "numeric",
             }}
             error={utrNumber.length > 0 && utrNumber.length < 12}
             sx={{ mb: 2 }}
@@ -198,7 +252,8 @@ const PaymentPage = () => {
         {/* Success Message */}
         {showSuccessMessage && (
           <Alert severity="success" sx={{ mt: 2 }}>
-            Please wait if you deposited money, it will be added in your wallet as soon as possible. Thank you!
+            Please wait if you deposited money, it will be added in your wallet
+            as soon as possible. Thank you!
           </Alert>
         )}
       </Paper>

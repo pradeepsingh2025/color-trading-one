@@ -31,8 +31,20 @@ const Profile = ({
   onNotificationClick,
 }) => {
   const navigate = useNavigate();
-  const user = useUser();
+  const { user } = useUser();
   console.log("user data from profile component", user);
+
+  const lastlogin = new Date(user.createdAt);
+
+  const formattedDate = lastlogin.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
 
   const handleDeposit = () => {
     if (onDeposit) onDeposit();
@@ -68,17 +80,16 @@ const Profile = ({
       >
         {/* Profile Header */}
         <ProfileHeader
-          username={username}
-          uid={uid}
+          uid={user.userId}
           avatarUrl={avatarUrl}
-          lastLogin={lastLogin}
+          lastLogin={formattedDate}
         />
         {/* Notification Card */}
         <NotificationCard onClick={handleNotificationClick} />
 
         {/* Wallet Balance */}
         <WalletBalance
-          balance={balance}
+          balance={user.wallet.balance}
           onDeposit={handleDeposit}
           onWithdraw={handleWithdraw}
         />

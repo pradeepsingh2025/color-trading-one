@@ -7,7 +7,7 @@ import { UserProvider } from "./context/UserContext";
 
 const Layout = () => {
   const location = useLocation();
-  const user = location.state;
+  const user = location.state || JSON.parse(localStorage.getItem("user") || "null");
 
   return (
     <UserProvider initialUser={user}>

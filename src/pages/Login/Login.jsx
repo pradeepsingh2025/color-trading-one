@@ -109,6 +109,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/", { state: data.user });
       } else {
         console.log(error)
