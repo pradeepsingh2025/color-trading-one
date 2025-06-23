@@ -110,7 +110,6 @@ export default function LoginPage() {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         navigate("/", { state: data.user });
-        console.log(data);
       } else {
         console.log(error)
         setSubmitMessage(
