@@ -15,6 +15,8 @@ import Recharge from "./pages/Recharge/Recharge";
 import SignupPage from "./pages/Signup/Signup";
 import PaymentPage from "./pages/PaymentPage/PaymentPage";
 import Withdraw from "./pages/Withdraw/Withdraw";
+import AdminLogin from "./pages/AdminLogin/AdminLogin"
+import AdminPanel from "./pages/AdminPanel/AdminPanel"
 
 import ReactDOM from "react-dom/client";
 
@@ -60,6 +62,14 @@ const router = createBrowserRouter([
   {
     path: '/signup',
     element: <SignupPage />
+  },
+  {
+    path: '/adminlogin',
+    element: <AdminLogin />
+  },
+  {
+    path: '/adminpanel',
+    element: <AdminPanel />
   },
 ]);
 

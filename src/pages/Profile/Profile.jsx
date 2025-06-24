@@ -11,14 +11,7 @@ import { useUser } from "../../context/UserContext";
 import { useNavigate } from "react-router";
 
 const Profile = ({
-  // Profile Header Props
-  username = "MEMBERNNGGN9NP",
-  uid = "2721518",
   avatarUrl = "https://via.placeholder.com/80x80",
-  lastLogin = "2025-06-03 01:14:09",
-
-  // Wallet Props
-  balance = "₹0.66",
 
   // Stats Props
   totalDeposits = 0,

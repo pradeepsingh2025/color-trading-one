@@ -13,6 +13,7 @@ import {
   Container,
   Paper,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import {
   ContentCopy as CopyIcon,
   QrCode as QrCodeIcon,
@@ -26,7 +27,9 @@ const PaymentPage = () => {
 
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [utrNumber, setUtrNumber] = useState("");
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const timerRef = useRef(null);
 
@@ -74,28 +77,53 @@ const PaymentPage = () => {
 
   // Handle submit
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     if (timerRef.current) {
       clearTimeout(timerRef.current); // Stop the timer
     }
-    setShowSuccessMessage(true);
-    setUtrNumber("");
+    const token = localStorage.getItem("token");
+    setLoading(true);
+    setSubmitStatus(null);
 
     try {
       const response = await fetch("http://localhost:3001/api/user/deposit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          authorization: token,
+        },
         body: JSON.stringify({
           amount: amountToPay,
           utrNumber: utrNumber,
-          channel: upiId
+          channel: upiId,
         }),
       });
-    } catch (error) {}
+
+      const result = await response.json();
+
+      // result.data && result.data.message
+
+      if (response.ok && result.data && result.message) {
+        setSubmitMessage(result.message);
+        setSubmitStatus("success");
+        setUtrNumber("");
+      } else {
+        setSubmitMessage(result?.message || "Unknown error occurred.");
+        setSubmitStatus("error");
+      }
+    } catch (error) {
+      setSubmitMessage(
+        "Network error. Please check your connection and try again."
+      );
+      setSubmitStatus("error");
+    } finally {
+      setLoading(false);
+    }
 
     setTimeout(() => {
-      setShowSuccessMessage(false);
+      setSubmitMessage("");
+      setSubmitStatus(null);
       navigate("/recharge");
     }, 10000);
   };
@@ -236,6 +264,15 @@ const PaymentPage = () => {
             sx={{ mb: 2 }}
           />
         </Box>
+        {/* Success Message */}
+        {submitMessage && (
+          <Alert
+            severity={submitStatus === "error" ? "error" : "success"}
+            sx={{ mb: 2 }}
+          >
+            {submitMessage}
+          </Alert>
+        )}
 
         {/* Submit Button */}
         <Button
@@ -246,16 +283,15 @@ const PaymentPage = () => {
           disabled={!isUtrValid}
           sx={{ mb: 2, py: 1.5 }}
         >
-          Submit Payment
+          {loading ? (
+            <>
+              <CircularProgress size={24} color="inherit" sx={{ mr: 1 }} />
+              Submitting...
+            </>
+          ) : (
+            "Submit Payment"
+          )}
         </Button>
-
-        {/* Success Message */}
-        {showSuccessMessage && (
-          <Alert severity="success" sx={{ mt: 2 }}>
-            Please wait if you deposited money, it will be added in your wallet
-            as soon as possible. Thank you!
-          </Alert>
-        )}
       </Paper>
     </Container>
   );
