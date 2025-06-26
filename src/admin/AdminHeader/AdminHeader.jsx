@@ -4,7 +4,7 @@ import { Dashboard, Refresh } from "@mui/icons-material";
 
 const AdminHeader = ({ onRefresh }) => {
   return (
-    <AppBar position="static" sx={{ background: 'grey'}}>
+    <AppBar position="static" sx={{ background: 'blue'}}>
       <Toolbar>
         <Dashboard sx={{ mr: 2 }} />
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
