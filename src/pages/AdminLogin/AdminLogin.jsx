@@ -93,6 +93,7 @@ export default function AdminLogin() {
       });
       const { data, message } = await response.json();
       if (response.ok) {
+        console.log(" admin_token ",data.token)
         localStorage.setItem("admin_token", data.token)
         setLoginStatus("success");
         setSubmitMessage(`${message}, redirecting to admin pannel`);

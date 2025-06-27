@@ -41,67 +41,9 @@ function AdminPanel() {
   const [submitMessage, setSubmitMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Mock data for demonstration
-  // const mockTransactions = [
-  //   {
-  //     _id: "1",
-  //     orderId: "DEPOSIT_001",
-  //     userId: "user123",
-  //     type: "DEPOSIT",
-  //     amount: 1000,
-  //     status: "PENDING",
-  //     utrNumber: "UTR123456789",
-  //     channel: "UPI",
-  //     createdAt: new Date().toISOString(),
-  //   },
-  //   {
-  //     _id: "2",
-  //     orderId: "WITHDRAWAL_001",
-  //     userId: "user456",
-  //     type: "WITHDRAWAL",
-  //     amount: 500,
-  //     status: "PENDING",
-  //     upiId: "user456@paytm",
-  //     createdAt: new Date().toISOString(),
-  //   },
-  //   {
-  //     _id: "3",
-  //     orderId: "DEPOSIT_002",
-  //     userId: "user789",
-  //     type: "DEPOSIT",
-  //     amount: 2000,
-  //     status: "PROCESSING",
-  //     utrNumber: "UTR987654321",
-  //     channel: "Bank Transfer",
-  //     createdAt: new Date().toISOString(),
-  //   },
-  // ];
-
-  // const mockStats = [
-  //   {
-  //     _id: { type: "DEPOSIT", status: "PENDING" },
-  //     count: 5,
-  //     totalAmount: 15000,
-  //   },
-  //   {
-  //     _id: { type: "WITHDRAWAL", status: "PENDING" },
-  //     count: 3,
-  //     totalAmount: 7500,
-  //   },
-  //   {
-  //     _id: { type: "DEPOSIT", status: "COMPLETED" },
-  //     count: 12,
-  //     totalAmount: 45000,
-  //   },
-  //   {
-  //     _id: { type: "WITHDRAWAL", status: "COMPLETED" },
-  //     count: 8,
-  //     totalAmount: 22000,
-  //   },
-  // ];
-
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
+    console.log(token);
     if (!token) {
       navigate("/adminlogin");
     } else {
@@ -113,14 +55,12 @@ function AdminPanel() {
           navigate("/adminlogin");
         }
       } catch {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        localStorage.removeItem("admin_token");
       }
     }
   }, []);
 
   useEffect(() => {
-    console.log("check1");
     fetch("http://localhost:3001/api/admin/alltransactions", {
       method: "GET",
       headers: {
@@ -129,22 +69,20 @@ function AdminPanel() {
       },
     })
       .then(async (res) => {
-        console.log("check2");
-        if (res.ok) {
-          console.log("check2.0");
-        } else {
-          console.error();
-          console.log("check2.1");
-        }
-
         const data = await res.json();
-        console.log(data.transactions);
-        setTransactions(data.transactions);
-        setPage(data.pagination.page);
-        setSubmitMessage("All transaction fetched successfully!");
+
+        console.log("data fetching...", data);
+        console.log("data_transactions", data.data.transactions);
+
+        if (res.ok) {
+          setTransactions(data.data.transactions);
+          setPage(data.data.pagination.page);
+          setSubmitMessage(data.message);
+        } else {
+          console.log(data.message);
+        }
       })
       .catch((err) => {
-        console.log("check3");
         setSubmitMessage(
           `${err.message}.Error fetching all transactions. Redirecting to admin login`
         );
@@ -169,7 +107,7 @@ function AdminPanel() {
       .then(async (res) => {
         if (!res.ok) throw new Error("Not authenticated");
         const data = res.json();
-        setStats(data.stats);
+        setStats(data.data.stats);
         setSubmitMessage("Transactions stats fetched successfully!");
       })
       .catch((error) => {
@@ -190,32 +128,66 @@ function AdminPanel() {
     setActionDialog(true);
   };
 
-  const handleActionSubmit = () => {
+  const handleActionSubmit = async (e) => {
+    // e.preventDefault();
     // Simulate API call
-    const updatedTransactions = transactions.map((t) =>
-      t._id === selectedTransaction._id
-        ? {
-            ...t,
-            status:
-              actionType === "approve"
-                ? "PROCESSING"
-                : actionType === "complete"
-                ? "COMPLETED"
-                : "REJECTED",
-          }
-        : t
-    );
-    setTransactions(updatedTransactions);
 
-    setSnackbar({
-      open: true,
-      message: `Transaction ${actionType}d successfully`,
-      severity: "success",
-    });
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/admin/transactions/${selectedTransaction._id}/${actionType}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: localStorage.getItem("admin_token"),
+          },
+          body: JSON.stringify({
+            remarks: actionType === "approve" ? remarks : null,
+            paymentDetails: actionType === "complete" ? paymentDetails : null,
+            reason: actionType === "reject" ? remarks : null,
+          }),
+        }
+      );
 
-    setActionDialog(false);
-    setRemarks("");
-    setPaymentDetails("");
+      const { data } = await response.json();
+      console.log("selected trans", selectedTransaction);
+      console.log("transaction from server", data.transaction);
+
+      if (response.ok && selectedTransaction._id === data.transaction._id) {
+        console.log("transaction inside if from server", data.transaction);
+        const updatedTransactions = transactions.map((t) =>
+          t._id === selectedTransaction._id
+            ? {
+                ...t,
+                status:
+                  actionType === "approve"
+                    ? "PROCESSING"
+                    : actionType === "complete"
+                    ? "COMPLETED"
+                    : "REJECTED",
+              }
+            : t
+        );
+
+        setTransactions(updatedTransactions);
+
+        setSnackbar({
+          open: true,
+          message: `Transaction ${actionType}d successfully`,
+          severity: "success",
+        });
+
+        setActionDialog(false);
+        setActionType("")
+        setRemarks("");
+        setSelectedTransaction(null);
+        setPaymentDetails("");
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   const handleRefresh = () => {

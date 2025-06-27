@@ -52,6 +52,7 @@ const TransactionTable = ({ transactions, onActionClick }) => {
               <TableRow>
                 <TableCell>Order ID</TableCell>
                 <TableCell>User ID</TableCell>
+                <TableCell>UTR(UPI Ref)</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>Amount</TableCell>
                 <TableCell>Status</TableCell>
@@ -64,6 +65,7 @@ const TransactionTable = ({ transactions, onActionClick }) => {
                 <TableRow key={transaction._id}>
                   <TableCell>{transaction.orderId}</TableCell>
                   <TableCell>{transaction.userId}</TableCell>
+                  <TableCell>{transaction.utrNumber}</TableCell>
                   <TableCell>
                     <Chip 
                       label={transaction.type} 
