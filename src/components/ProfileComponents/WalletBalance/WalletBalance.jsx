@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -6,23 +6,21 @@ import {
   Button,
   Box,
   IconButton,
-  useTheme
-} from '@mui/material';
+  useTheme,
+} from "@mui/material";
 import {
   AccountBalanceWallet,
   Download,
   Upload,
   Visibility,
-  VisibilityOff
-} from '@mui/icons-material';
+  VisibilityOff,
+} from "@mui/icons-material";
 
-import { NavLink } from 'react-router';
+import { NavLink } from "react-router";
+import { useNavigate } from "react-router";
 
-const WalletBalance = ({
-  balance,
-  onDeposit,
-  onWithdraw
-}) => {
+const WalletBalance = ({ balanceProp, navigate }) => {
+  // const navigate = useNavigate()
   const [showBalance, setShowBalance] = useState(true);
   const theme = useTheme();
 
@@ -33,9 +31,16 @@ const WalletBalance = ({
   return (
     <Card elevation={2} sx={{ borderRadius: 3 }}>
       <CardContent sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <AccountBalanceWallet sx={{ color: 'primary.main' }} />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <AccountBalanceWallet sx={{ color: "primary.main" }} />
             <Typography variant="h6" sx={{ fontWeight: 500 }}>
               Wallet Balance
             </Typography>
@@ -50,81 +55,59 @@ const WalletBalance = ({
           sx={{
             fontWeight: 700,
             mb: 3,
-            background: 'linear-gradient(45deg, #667eea, #764ba2)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            letterSpacing: '-1px'
+            background: "linear-gradient(45deg, #667eea, #764ba2)",
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            letterSpacing: "-1px",
           }}
         >
-          {showBalance ? `₹${balance}` : '₹***'}
+          {showBalance ? `₹${balanceProp}` : "₹***"}
         </Typography>
 
         {/* Action Buttons */}
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{ display: "flex", gap: 2 }}>
           <Button
             variant="contained"
             fullWidth
-            onClick={onDeposit}
+            onClick={() =>
+              navigate("/recharge", { state: { balance: balanceProp } })
+            }
             sx={{
               py: 1,
               borderRadius: 2,
-              textTransform: 'none',
+              textTransform: "none",
               fontWeight: 500,
-              background: 'linear-gradient(45deg, #4caf50, #66bb6a)',
+              background: "linear-gradient(45deg, #4caf50, #66bb6a)",
               boxShadow: theme.shadows[3],
-              '&:hover': {
-                background: 'linear-gradient(45deg, #388e3c, #4caf50)',
+              "&:hover": {
+                background: "linear-gradient(45deg, #388e3c, #4caf50)",
                 boxShadow: theme.shadows[6],
-              }
+              },
             }}
           >
-            <NavLink
-              to='/recharge'
-              style={{
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 2,
-                color: 'white',
-                width: '100%'
-              }}
-            >
-              <Download />
-              Deposit
-            </NavLink>
+            <Download />
+            Deposit
           </Button>
           <Button
             variant="outlined"
             fullWidth
-            onClick={onWithdraw}
+            onClick={() =>
+              navigate("/withdraw", { state: { balance: balanceProp } })
+            }
             sx={{
               py: 1.5,
               borderRadius: 2,
-              textTransform: 'none',
+              textTransform: "none",
               fontWeight: 500,
               borderWidth: 2,
-              '&:hover': {
-                borderWidth: 2
-              }
+              "&:hover": {
+                borderWidth: 2,
+              },
             }}
           >
-             <NavLink
-              to='/withdraw'
-              style={{
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 2,
-                color: 'black',
-                width: '100%'
-              }}
-            >
-              <Upload />
-              Withdraw
-            </NavLink>
+            <Upload />
+            Withdraw
           </Button>
         </Box>
       </CardContent>

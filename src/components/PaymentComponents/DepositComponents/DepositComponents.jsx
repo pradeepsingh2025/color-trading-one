@@ -31,9 +31,13 @@ import { useUser } from "../../../context/UserContext";
 export default function WalletDepositInterface() {
   const { user } = useUser();
 
-  
-
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const [balanceFromLocation, setBalanceFromLocation] = useState(
+    location.state?.balance ? location.state?.balance : user.wallet.balance
+  );
+
   const [amount, setAmount] = useState("");
   const [paymentChannel, setPaymentChannel] = useState("");
   const [error, setError] = useState("");
@@ -185,7 +189,7 @@ export default function WalletDepositInterface() {
                 <AccountBalanceWallet sx={{ fontSize: 30 }} />
               </Box>
               <Typography variant="h3" sx={{ fontWeight: "bold", mb: 1 }}>
-                ₹{user.wallet.balance.toLocaleString()}
+                ₹{balanceFromLocation.toLocaleString()}
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.9 }}>
                 Available for transactions

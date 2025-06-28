@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Card,
   CardContent,
@@ -12,34 +12,44 @@ import {
   Paper,
   Chip,
   Box,
-  IconButton
-} from '@mui/material';
+  IconButton,
+} from "@mui/material";
 import {
   Pending,
   TrendingUp,
   CheckCircle,
   Cancel,
-  Visibility
-} from '@mui/icons-material';
+  Visibility,
+} from "@mui/icons-material";
 
 const TransactionTable = ({ transactions, onActionClick }) => {
   const getStatusColor = (status) => {
     switch (status) {
-      case 'PENDING': return 'warning';
-      case 'PROCESSING': return 'info';
-      case 'COMPLETED': return 'success';
-      case 'REJECTED': return 'error';
-      default: return 'default';
+      case "PENDING":
+        return "warning";
+      case "PROCESSING":
+        return "info";
+      case "COMPLETED":
+        return "success";
+      case "REJECTED":
+        return "error";
+      default:
+        return "default";
     }
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'PENDING': return <Pending />;
-      case 'PROCESSING': return <TrendingUp />;
-      case 'COMPLETED': return <CheckCircle />;
-      case 'REJECTED': return <Cancel />;
-      default: return null;
+      case "PENDING":
+        return <Pending />;
+      case "PROCESSING":
+        return <TrendingUp />;
+      case "COMPLETED":
+        return <CheckCircle />;
+      case "REJECTED":
+        return <Cancel />;
+      default:
+        return null;
     }
   };
 
@@ -50,14 +60,15 @@ const TransactionTable = ({ transactions, onActionClick }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Order ID</TableCell>
-                <TableCell>User ID</TableCell>
-                <TableCell>UTR(UPI Ref)</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell align="center">Order ID</TableCell>
+                <TableCell align="center">User ID</TableCell>
+                <TableCell align="center">UTR(UPI Ref)</TableCell>
+                <TableCell align="center">UPI ID</TableCell>
+                <TableCell align="center">Type</TableCell>
+                <TableCell align="center">Amount</TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -65,11 +76,18 @@ const TransactionTable = ({ transactions, onActionClick }) => {
                 <TableRow key={transaction._id}>
                   <TableCell>{transaction.orderId}</TableCell>
                   <TableCell>{transaction.userId}</TableCell>
-                  <TableCell>{transaction.utrNumber}</TableCell>
+                  <TableCell align="center">
+                    {transaction.utrNumber ? transaction.utrNumber : "-"}
+                  </TableCell>
+                  <TableCell align="center">
+                    {transaction.upiId ? transaction.upiId : "-"}
+                  </TableCell>
                   <TableCell>
-                    <Chip 
-                      label={transaction.type} 
-                      color={transaction.type === 'DEPOSIT' ? 'success' : 'warning'}
+                    <Chip
+                      label={transaction.type}
+                      color={
+                        transaction.type === "DEPOSIT" ? "success" : "warning"
+                      }
                       size="small"
                     />
                   </TableCell>
@@ -87,13 +105,15 @@ const TransactionTable = ({ transactions, onActionClick }) => {
                   </TableCell>
                   <TableCell>
                     <Box display="flex" gap={1}>
-                      {transaction.status === 'PENDING' && (
+                      {transaction.status === "PENDING" && (
                         <>
                           <Button
                             size="small"
                             variant="contained"
                             color="success"
-                            onClick={() => onActionClick(transaction, 'approve')}
+                            onClick={() =>
+                              onActionClick(transaction, "approve")
+                            }
                           >
                             Approve
                           </Button>
@@ -101,18 +121,18 @@ const TransactionTable = ({ transactions, onActionClick }) => {
                             size="small"
                             variant="contained"
                             color="error"
-                            onClick={() => onActionClick(transaction, 'reject')}
+                            onClick={() => onActionClick(transaction, "reject")}
                           >
                             Reject
                           </Button>
                         </>
                       )}
-                      {transaction.status === 'PROCESSING' && (
+                      {transaction.status === "PROCESSING" && (
                         <Button
                           size="small"
                           variant="contained"
                           color="primary"
-                          onClick={() => onActionClick(transaction, 'complete')}
+                          onClick={() => onActionClick(transaction, "complete")}
                         >
                           Complete
                         </Button>

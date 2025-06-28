@@ -35,7 +35,8 @@ function AdminPanel() {
     message: "",
     severity: "success",
   });
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState("");
+  const [totalPages, setTotalPages] = useState("")
   const [transactionType, setTransactionType] = useState("");
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [submitMessage, setSubmitMessage] = useState("");
@@ -43,7 +44,7 @@ function AdminPanel() {
 
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
-    console.log(token);
+    // console.log(token);
     if (!token) {
       navigate("/adminlogin");
     } else {
@@ -61,7 +62,7 @@ function AdminPanel() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/admin/alltransactions", {
+    fetch(`http://localhost:3001/api/admin/alltransactions?page=${page}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -71,12 +72,13 @@ function AdminPanel() {
       .then(async (res) => {
         const data = await res.json();
 
-        console.log("data fetching...", data);
         console.log("data_transactions", data.data.transactions);
+        console.log("data_pagination", data.data.pagination);
 
         if (res.ok) {
           setTransactions(data.data.transactions);
           setPage(data.data.pagination.page);
+          setTotalPages(data.data.pagination.totalPages);
           setSubmitMessage(data.message);
         } else {
           console.log(data.message);
@@ -91,10 +93,9 @@ function AdminPanel() {
         }, 5000); // 🚀 Redirect here
       })
       .finally(() => {
-        setLoading(false);
         setSubmitMessage("");
       });
-  }, [navigate]);
+  }, [navigate, loading, page]);
 
   useEffect(() => {
     fetch("http://localhost:3001/api/admin/transactions/stats", {
@@ -105,8 +106,9 @@ function AdminPanel() {
       },
     })
       .then(async (res) => {
+        console.log("check1");
         if (!res.ok) throw new Error("Not authenticated");
-        const data = res.json();
+        const data = await res.json();
         setStats(data.data.stats);
         setSubmitMessage("Transactions stats fetched successfully!");
       })
@@ -116,7 +118,7 @@ function AdminPanel() {
       .finally(() => {
         setSubmitMessage("");
       });
-  }, [navigate]);
+  }, [navigate, loading]);
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
@@ -149,12 +151,9 @@ function AdminPanel() {
         }
       );
 
-      const { data } = await response.json();
-      console.log("selected trans", selectedTransaction);
-      console.log("transaction from server", data.transaction);
+      const { data, message } = await response.json();
 
       if (response.ok && selectedTransaction._id === data.transaction._id) {
-        console.log("transaction inside if from server", data.transaction);
         const updatedTransactions = transactions.map((t) =>
           t._id === selectedTransaction._id
             ? {
@@ -178,12 +177,12 @@ function AdminPanel() {
         });
 
         setActionDialog(false);
-        setActionType("")
+        setActionType("");
         setRemarks("");
         setSelectedTransaction(null);
         setPaymentDetails("");
       } else {
-        console.log(data.message);
+        console.log(message);
       }
     } catch (error) {
       throw new Error(error);
@@ -191,7 +190,7 @@ function AdminPanel() {
   };
 
   const handleRefresh = () => {
-    // Simulate refresh
+    setLoading((prev) => !prev);
     setSnackbar({
       open: true,
       message: "Data refreshed successfully",
@@ -257,7 +256,7 @@ function AdminPanel() {
 
             <Box display="flex" justifyContent="center" mt={3}>
               <Pagination
-                count={10}
+                count={totalPages}
                 page={page}
                 onChange={(e, value) => setPage(value)}
                 color="primary"
