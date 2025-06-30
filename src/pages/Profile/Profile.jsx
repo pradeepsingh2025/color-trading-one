@@ -42,7 +42,7 @@ const Profile = ({
         setBalance(data.balance);
       }
     });
-  }, []);
+  }, [navigate]);
 
 
   console.log("user data from profile component", user);
