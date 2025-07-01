@@ -39,8 +39,8 @@ const HistoryDialog = ({ open, onClose, selectedPeriod, gameResults }) => {
                     height: 32,
                     fontSize: '0.875rem',
                     fontWeight: 'bold',
-                    bgcolor: result.color.name === 'green' ? 'success.main' :
-                            result.color.name === 'violet' ? 'secondary.main' : 'error.main'
+                    bgcolor: result.color === 'green' ? 'success.main' :
+                            result.color === 'violet' ? 'secondary.main' : 'error.main'
                   }}
                 >
                   {result.number}
@@ -48,7 +48,7 @@ const HistoryDialog = ({ open, onClose, selectedPeriod, gameResults }) => {
               </ListItemIcon>
               <ListItemText
                 primary={`Number: ${result.number}`}
-                secondary={`Color: ${result.color.name}`}
+                secondary={`Color: ${result.color}`}
               />
             </ListItem>
           ))}

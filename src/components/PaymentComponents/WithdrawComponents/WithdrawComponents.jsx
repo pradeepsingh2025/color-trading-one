@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import {
   Box,
   Card,
@@ -20,13 +21,11 @@ import {
 } from "@mui/icons-material";
 
 import { useUser } from "../../../context/UserContext";
-import { useLocation } from "react-router";
 
 const WalletWithdraw = () => {
-  const { user } = useUser();
-  const location = useLocation();
+  const { user, refreshUserBalance } = useUser();
 
-  const [walletBalance, setWalletBalance] = useState(location.state.balance);
+  const [walletBalance, setWalletBalance] = useState(user.wallet.balance);
   const [upiId, setUpiId] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [amountError, setAmountError] = useState("");

@@ -24,26 +24,11 @@ const Profile = ({
   onNotificationClick,
 }) => {
   const navigate = useNavigate();
-  const { user } = useUser();
-
-  const [balance, setBalance] = useState(user.wallet.balance)
+  const { user, refreshUserBalance } = useUser();
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/user/wallet/balance", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: localStorage.getItem("token"),
-      },
-    }).then(async (res) => {
-      const { data } = await res.json();
-      console.log(data.balance)
-      if (res.ok) {
-        setBalance(data.balance);
-      }
-    });
-  }, [navigate]);
-
+    refreshUserBalance();
+  }, []);
 
   console.log("user data from profile component", user);
 
@@ -58,14 +43,6 @@ const Profile = ({
     second: "2-digit",
     hour12: true,
   });
-
-  const handleDeposit = () => {
-    if (onDeposit) onDeposit();
-  };
-
-  const handleWithdraw = () => {
-    if (onWithdraw) onWithdraw();
-  };
 
   const handleMenuItemClick = (item) => {
     if (onMenuItemClick) onMenuItemClick(item);
@@ -101,10 +78,7 @@ const Profile = ({
         <NotificationCard onClick={handleNotificationClick} />
 
         {/* Wallet Balance */}
-        <WalletBalance
-          balanceProp={balance}
-          navigate={navigate}
-        />
+        <WalletBalance />
 
         {/* Quick Stats */}
         <QuickStats

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -25,23 +25,22 @@ import {
   Warning,
 } from "@mui/icons-material";
 
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../context/UserContext";
 
 export default function WalletDepositInterface() {
-  const { user } = useUser();
+  const { user, refreshUserBalance } = useUser();
 
-  const location = useLocation();
   const navigate = useNavigate();
-
-  const [balanceFromLocation, setBalanceFromLocation] = useState(
-    location.state?.balance ? location.state?.balance : user.wallet.balance
-  );
 
   const [amount, setAmount] = useState("");
   const [paymentChannel, setPaymentChannel] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    refreshUserBalance();
+  }, []);
 
   const validateAmount = (value) => {
     const numValue = parseFloat(value);
@@ -189,7 +188,7 @@ export default function WalletDepositInterface() {
                 <AccountBalanceWallet sx={{ fontSize: 30 }} />
               </Box>
               <Typography variant="h3" sx={{ fontWeight: "bold", mb: 1 }}>
-                ₹{balanceFromLocation.toLocaleString()}
+                ₹{user.wallet.balance.toLocaleString()}
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.9 }}>
                 Available for transactions

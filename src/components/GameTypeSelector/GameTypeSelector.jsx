@@ -1,4 +1,3 @@
-import React from 'react';
 import { Stack, CardContent, Box, Typography } from '@mui/material';
 import { Timer } from '@mui/icons-material';
 import { GameCard } from '../styled/StyledComponents';

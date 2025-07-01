@@ -16,13 +16,19 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 
-import { NavLink } from "react-router";
+import { useUser } from "../../../context/UserContext";
 import { useNavigate } from "react-router";
 
-const WalletBalance = ({ balanceProp, navigate }) => {
-  // const navigate = useNavigate()
+
+const WalletBalance = () => {
+  const navigate = useNavigate()
+  const {user, refreshUserBalance} = useUser()
   const [showBalance, setShowBalance] = useState(true);
   const theme = useTheme();
+
+  useEffect(()=>{
+    refreshUserBalance();
+  },[])
 
   const toggleBalanceVisibility = () => {
     setShowBalance(!showBalance);
@@ -62,7 +68,7 @@ const WalletBalance = ({ balanceProp, navigate }) => {
             letterSpacing: "-1px",
           }}
         >
-          {showBalance ? `₹${balanceProp}` : "₹***"}
+          {showBalance ? `₹${user.wallet.balance}` : "₹***"}
         </Typography>
 
         {/* Action Buttons */}
@@ -70,9 +76,7 @@ const WalletBalance = ({ balanceProp, navigate }) => {
           <Button
             variant="contained"
             fullWidth
-            onClick={() =>
-              navigate("/recharge", { state: { balance: balanceProp } })
-            }
+            onClick={() => navigate("/recharge")}
             sx={{
               py: 1,
               borderRadius: 2,
@@ -92,9 +96,7 @@ const WalletBalance = ({ balanceProp, navigate }) => {
           <Button
             variant="outlined"
             fullWidth
-            onClick={() =>
-              navigate("/withdraw", { state: { balance: balanceProp } })
-            }
+            onClick={() => navigate("/withdraw")}
             sx={{
               py: 1.5,
               borderRadius: 2,

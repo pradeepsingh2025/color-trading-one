@@ -45,8 +45,8 @@ const GameInfo = ({
                   height: 24,
                   fontSize: '0.75rem',
                   fontWeight: 'bold',
-                  bgcolor: result.color.name === 'green' ? 'success.main' :
-                          result.color.name === 'violet' ? 'secondary.main' : 'error.main'
+                  bgcolor: result.color === 'green' ? 'success.main' :
+                          result.color === 'violet' ? 'secondary.main' : 'error.main'
                 }}
               >
                 {result.number}
