@@ -38,9 +38,9 @@ const GameTypeCard = ({ periodKey, isActive, onPeriodChange }) => {
 };
 
 const GameTypeSelector = ({ selectedPeriod, onPeriodChange, gamePhase }) => {
-  const handlePeriodChange = (period) => {
+  const handlePeriodChange = (periodKey) => {
     if (gamePhase === 'betting') {
-      onPeriodChange(period);
+      onPeriodChange(periodKey);
     }
   };
 

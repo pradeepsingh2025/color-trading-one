@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Container } from "@mui/material";
 import { io } from "socket.io-client";
 import { useUser } from "../../context/UserContext";
@@ -26,16 +26,17 @@ const Game = () => {
 
   //game states
   const [gameStates, setGameStates] = useState({
-    "30s": null,
+    "30s": null, // state = {phase, timeRemaining, round, lastResult}
     "1m": null,
     "3m": null,
     "5m": null,
   });
 
   const [selectedPeriod, setSelectedPeriod] = useState("3m");
-  const [timeRemaining, setTimeRemaining] = useState(
-    GAME_PERIODS["3m"].duration
-  );
+
+  //gameType(backend) and selectedPeriod(frontend) is same thing
+
+  const [timeRemaining, setTimeRemaining] = useState();
   const [selectedBet, setSelectedBet] = useState(null);
   const [currentBet, setCurrentBet] = useState(null);
 
@@ -47,6 +48,8 @@ const Game = () => {
     "3m": [],
     "5m": [],
   });
+
+  //currentPeriod(frontend) and round(backend) is same thing
   const [currentPeriod, setCurrentPeriod] = useState("");
 
   const [balance, setBalance] = useState(0);
@@ -58,6 +61,11 @@ const Game = () => {
   const [lastResult, setLastResult] = useState(null);
 
   const [userId] = useState(user.userID);
+
+  const selectedPeriodRef = useRef(selectedPeriod);
+  useEffect(() => {
+    selectedPeriodRef.current = selectedPeriod;
+  }, [selectedPeriod]);
 
   useEffect(() => {
     socket.current = io("http://localhost:3001", {
@@ -80,24 +88,36 @@ const Game = () => {
 
     // Game state listeners
     socket.current.on("gameState30s", (state) => {
+      //state from backend has the following structure
+      // state = {phase, timeRemaining, round, lastResult}
+
       console.log("Received 30s game state:", state);
       setGameStates((prev) => ({ ...prev, "30s": state }));
       updateUIFromGameState("30s", state);
     });
 
     socket.current.on("gameState1m", (state) => {
+      //state from backend has the following structure
+      // state = {phase, timeRemaining, round, lastResult}
+
       console.log("Received 1m game state:", state);
       setGameStates((prev) => ({ ...prev, "1m": state }));
       updateUIFromGameState("1m", state);
     });
 
     socket.current.on("gameState3m", (state) => {
+      //state from backend has the following structure
+      // state = {phase, timeRemaining, round, lastResult}
+
       console.log("Received 3m game state:", state);
       setGameStates((prev) => ({ ...prev, "3m": state }));
       updateUIFromGameState("3m", state);
     });
 
     socket.current.on("gameState5m", (state) => {
+      //state from backend has the following structure
+      // state = {phase, timeRemaining, round, lastResult}
+
       console.log("Received 5m game state:", state);
       setGameStates((prev) => ({ ...prev, "5m": state }));
       updateUIFromGameState("5m", state);
@@ -105,11 +125,21 @@ const Game = () => {
 
     // Timer updates
     socket.current.on("timer", (data) => {
-      const { gameType, timeRemaining: time, phase } = data;
+      const { gameType, timeRemaining, phase } = data;
+
+      // Always update gameStates for the correct period
+      setGameStates((prev) => ({
+        ...prev,
+        [gameType]: {
+          ...(prev[gameType] || {}),
+          phase,
+          timeRemaining,
+        },
+      }));
 
       // Update only if this is the selected period
-      if (gameType === selectedPeriod) {
-        setTimeRemaining(time);
+      if (gameType === selectedPeriodRef.current) {
+        setTimeRemaining(timeRemaining);
         setGamePhase(phase);
       }
     });
@@ -126,7 +156,7 @@ const Game = () => {
       }));
 
       // If this is the selected period, update phase
-      if (gameType === selectedPeriod) {
+      if (gameType === selectedPeriodRef.current) {
         setGamePhase("result");
       }
     });
@@ -136,15 +166,17 @@ const Game = () => {
       const { gameType, newState } = data;
       console.log("New round started:", data);
 
+      //newState = {phase, timeRemaining, round, lastResult}
+
       setGameStates((prev) => ({ ...prev, [gameType]: newState }));
 
       // If this is the selected period, reset UI
-      if (gameType === selectedPeriod) {
+      if (gameType === selectedPeriodRef.current) {
         setGamePhase("betting");
         setSelectedBet(null);
         setCurrentBet(null);
         setShowBetPopup(false);
-        setCurrentPeriod(newState.currentRound);
+        setCurrentPeriod(newState.round); //currentPeriod == round
         setTimeRemaining(newState.timeRemaining);
       }
     });
@@ -156,7 +188,7 @@ const Game = () => {
       setShowBetPopup(false);
 
       // Update balance after bet
-      // getUserBalance();
+      getUserBalance();
     });
 
     // User balance
@@ -199,17 +231,10 @@ const Game = () => {
   }, [selectedPeriod, gameStates]);
 
   const updateUIFromGameState = (gameType, state) => {
-    if (gameType === selectedPeriod) {
+    if (gameType === selectedPeriodRef.current) {
       setTimeRemaining(state.timeRemaining);
       setGamePhase(state.phase);
-      setCurrentPeriod(state.currentRound);
-      setGameResults((prev) => ({
-        ...prev,
-        [gameType]: [
-          { ...lastResult, round: state.currentRound },
-          ...prev[gameType],
-        ],
-      }));
+      setCurrentPeriod(state.round); //current period === round
       setLastResult(state.lastResult);
     }
   };
@@ -251,14 +276,14 @@ const Game = () => {
     }
   };
 
-  const startNewRound = useCallback(() => {
-    const duration = GAME_PERIODS[selectedPeriod].duration;
-    setTimeRemaining(duration);
-    setGamePhase("betting");
-    setSelectedBet(null);
-    setShowBetPopup(false);
-    setCurrentPeriod(Date.now().toString());
-  }, [selectedPeriod]);
+  // const startNewRound = useCallback(() => {
+  //   const duration = GAME_PERIODS[selectedPeriod].duration;
+  //   setTimeRemaining(duration);
+  //   setGamePhase("betting");
+  //   setSelectedBet(null);
+  //   setShowBetPopup(false);
+  //   setCurrentPeriod(Date.now().toString());
+  // }, [selectedPeriod]);
 
   const confirmBet = () => {
     if (!socket.current || !socket.current.connected) {
@@ -305,72 +330,6 @@ const Game = () => {
 
   // Mock numbers array for NumberSelection component
   const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setTimeRemaining((prev) => {
-  //       if (prev <= 1) {
-  //         if (gamePhase === "betting") {
-  //           setGamePhase("revealing");
-  //           const result = game.generateResult();
-  //           setLastResult(result);
-  //           setGameResults((prevResults) => ({
-  //             ...prevResults,
-  //             [selectedPeriod]: [
-  //               result,
-  //               ...prevResults[selectedPeriod].slice(0, 9),
-  //             ],
-  //           }));
-
-  //           let winnings = 0;
-  //           if (selectedBet) {
-  //             if (
-  //               selectedBet.type === "color" &&
-  //               selectedBet.value === result.color.name
-  //             ) {
-  //               winnings += betAmount * betQuantity * result.color.payout;
-  //             } else if (
-  //               selectedBet.type === "number" &&
-  //               selectedBet.value === result.number
-  //             ) {
-  //               winnings += betAmount * betQuantity * 9;
-  //             } else if (selectedBet.type === "big" && result.number >= 5) {
-  //               winnings += betAmount * betQuantity * 2;
-  //             } else if (selectedBet.type === "small" && result.number <= 4) {
-  //               winnings += betAmount * betQuantity * 2;
-  //             }
-  //           }
-
-  //           if (winnings > 0) {
-  //             setBalance((prev) => prev + winnings - betAmount * betQuantity);
-  //           } else if (selectedBet) {
-  //             setBalance((prev) => prev - betAmount * betQuantity);
-  //           }
-
-  //           setTimeout(() => {
-  //             startNewRound();
-  //           }, 3000);
-
-  //           return 3;
-  //         } else {
-  //           startNewRound();
-  //           return GAME_PERIODS[selectedPeriod].duration;
-  //         }
-  //       }
-  //       return prev - 1;
-  //     });
-  //   }, 1000);
-
-  //   return () => clearInterval(timer);
-  // }, [
-  //   gamePhase,
-  //   selectedBet,
-  //   betAmount,
-  //   betQuantity,
-  //   game,
-  //   startNewRound,
-  //   selectedPeriod,
-  // ]);
 
   return (
     <Container
@@ -425,33 +384,6 @@ const Game = () => {
         gamePhase={gamePhase}
         onSelection={handleSelection}
       />
-
-      {/* Current Bet Section */}
-      {currentBet && (
-        <div
-          style={{
-            margin: "16px 0",
-            padding: "12px",
-            background: "#e3f2fd",
-            borderRadius: "6px",
-            color: "#1565c0",
-          }}
-        >
-          <strong>Current Bet:</strong>
-          <div>Type: {currentBet.type}</div>
-          <div>
-            Selection:{" "}
-            {currentBet.displayName ||
-              currentBet.selection ||
-              currentBet.color ||
-              currentBet.number ||
-              currentBet.size}
-          </div>
-          <div>Amount: {currentBet.amount}</div>
-          <div>Quantity: {currentBet.quantity}</div>
-          <div>Total: {currentBet.totalAmount}</div>
-        </div>
-      )}
 
       <GameStatus
         balance={balance}
