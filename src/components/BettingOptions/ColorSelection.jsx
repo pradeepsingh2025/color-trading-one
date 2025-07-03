@@ -3,6 +3,7 @@ import { Stack } from '@mui/material';
 import { ColorButton } from '../styled/StyledComponents';
 
 const ColorSelection = ({ selectedBet, gamePhase, onSelection }) => {
+  // onSelection takes 3 param {type, value, displayName}
   const colors = ['green', 'violet', 'red'];
 
   return (

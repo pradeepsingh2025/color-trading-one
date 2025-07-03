@@ -60,7 +60,7 @@ const Game = () => {
   const [gamePhase, setGamePhase] = useState("betting");
   const [lastResult, setLastResult] = useState(null);
 
-  const [userId] = useState(user.userID);
+  // const [userId] = useState(user.userID);
 
   const selectedPeriodRef = useRef(selectedPeriod);
   useEffect(() => {
@@ -78,7 +78,7 @@ const Game = () => {
       setIsConnected(true);
 
       // Request user balance on connection
-      // getUserBalance();
+      getUserBalance();
     });
 
     socket.current.on("disconnect", () => {
@@ -152,7 +152,7 @@ const Game = () => {
       setLastResult(result);
       setGameResults((prev) => ({
         ...prev,
-        [gameType]: [{ ...result, round }, ...prev[gameType].slice(0, 9)],
+        [gameType]: [{ ...result, round }, ...prev[gameType].slice(0, 14)],
       }));
 
       // If this is the selected period, update phase
@@ -195,11 +195,11 @@ const Game = () => {
     socket.current.on("userBalance", (data) => {
       console.log("User balance received:", data);
       setBalance(data.balance);
+      console.log("user balance", data.balance);
     });
 
     // Current bet
     socket.current.on("currentBet", (data) => {
-      console.log("Current bet received:", data);
       if (data.bet) {
         setCurrentBet(data.bet);
       }
@@ -223,9 +223,8 @@ const Game = () => {
   useEffect(() => {
     const currentGameState = gameStates[selectedPeriod];
     if (currentGameState) {
-      updateUIFromGameState(selectedPeriod, currentGameState);
+      updateUIFromGameState(selectedPeriodRef.current, currentGameState);
     }
-
     // Get current bet for the selected period
     getCurrentBet();
   }, [selectedPeriod, gameStates]);
@@ -242,7 +241,7 @@ const Game = () => {
   const getUserBalance = () => {
     if (socket.current && socket.current.connected) {
       socket.current.emit("getUserBalance", {
-        userId: userId,
+        userId: user.userId,
       });
     }
   };
@@ -250,7 +249,7 @@ const Game = () => {
   const getCurrentBet = () => {
     if (socket.current && socket.current.connected) {
       socket.current.emit("getCurrentBet", {
-        userId: userId,
+        userId: user.userId,
         gameType: selectedPeriod,
       });
     }
@@ -276,15 +275,6 @@ const Game = () => {
     }
   };
 
-  // const startNewRound = useCallback(() => {
-  //   const duration = GAME_PERIODS[selectedPeriod].duration;
-  //   setTimeRemaining(duration);
-  //   setGamePhase("betting");
-  //   setSelectedBet(null);
-  //   setShowBetPopup(false);
-  //   setCurrentPeriod(Date.now().toString());
-  // }, [selectedPeriod]);
-
   const confirmBet = () => {
     if (!socket.current || !socket.current.connected) {
       alert("Not connected to server");
@@ -298,7 +288,7 @@ const Game = () => {
 
     // Create bet object based on selection type
     let betData = {
-      userId: userId,
+      userId: user.userId,
       gameType: selectedPeriod,
       bet: {
         amount: betAmount,
@@ -315,8 +305,8 @@ const Game = () => {
       betData.bet.color = selectedBet.value;
     } else if (selectedBet.type === "number") {
       betData.bet.number = selectedBet.value;
-    } else if (selectedBet.type === "big" || selectedBet.type === "small") {
-      betData.bet.size = selectedBet.type;
+    } else if (selectedBet.type === "size") {
+      betData.bet.size = selectedBet.value;
     }
 
     console.log("Placing bet:", betData);
@@ -369,20 +359,20 @@ const Game = () => {
       <ColorSelection
         selectedBet={selectedBet}
         gamePhase={gamePhase}
-        onSelection={handleSelection}
+        onSelection={handleSelection} //{type, value, displayName}
       />
 
       <NumberSelection
         selectedBet={selectedBet}
         gamePhase={gamePhase}
-        onSelection={handleSelection}
+        onSelection={handleSelection} //{type, value, displayName}
         numbers={numbers}
       />
 
       <SizeSelection
         selectedBet={selectedBet}
         gamePhase={gamePhase}
-        onSelection={handleSelection}
+        onSelection={handleSelection} //{type, value, displayName}
       />
 
       <GameStatus

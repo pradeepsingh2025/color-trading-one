@@ -29,7 +29,7 @@ const GameStatus = ({
       <Paper sx={{ p: 2, mb: 2 }}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Typography variant="h6" fontWeight="bold">
-            Balance: ${balance}
+            Balance: ₹{balance}
           </Typography>
           <Button
             variant="contained"

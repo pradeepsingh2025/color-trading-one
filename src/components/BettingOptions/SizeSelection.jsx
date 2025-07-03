@@ -3,6 +3,7 @@ import { Stack } from '@mui/material';
 import { SizeButton } from '../styled/StyledComponents';
 
 const SizeSelection = ({ selectedBet, gamePhase, onSelection }) => {
+  //{type, value, displayName}
   return (
     <Stack direction="row" spacing={1} mb={2}>
       <SizeButton
@@ -11,7 +12,7 @@ const SizeSelection = ({ selectedBet, gamePhase, onSelection }) => {
         size="big"
         selected={selectedBet?.type === 'big'}
         disabled={gamePhase !== 'betting'}
-        onClick={() => onSelection('big', 'big', 'Big (5-9)')}
+        onClick={() => onSelection('size', 'big', 'Big (5-9)')}
       >
         Big (5-9)
       </SizeButton>
@@ -21,7 +22,7 @@ const SizeSelection = ({ selectedBet, gamePhase, onSelection }) => {
         size="small"
         selected={selectedBet?.type === 'small'}
         disabled={gamePhase !== 'betting'}
-        onClick={() => onSelection('small', 'small', 'Small (0-4)')}
+        onClick={() => onSelection('size', 'small', 'Small (0-4)')}
       >
         Small (0-4)
       </SizeButton>
