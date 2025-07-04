@@ -150,7 +150,7 @@ const Game = () => {
       // If this is the selected period, update phase
       if (gameType === selectedPeriodRef.current) {
         console.log("check");
-        setLastResult(result);
+        setLastResult({ gameType, result, round });
 
         // setGamePhase("result")
 
@@ -193,6 +193,7 @@ const Game = () => {
       setCurrentBet({
         gameType: data.gameType,
         displayName: data.bet.displayName,
+        bet: data.bet,
       });
       setShowBetPopup(false);
 
@@ -349,6 +350,62 @@ const Game = () => {
     setShowBetPopup(false);
   };
 
+  //process win/loss
+
+  const processWin = () => {
+    // Validate inputs
+    if (!currentBet?.bet || !lastResult) {
+      return false;
+    }
+
+    // Must be same game period
+    if (currentBet.gameType !== lastResult.gameType) {
+      return false;
+    }
+
+    const { type, selection } = currentBet.bet;
+
+    switch (type) {
+      case "number":
+        return selection === lastResult.result.number;
+
+      case "color":
+        return (
+          selection?.toLowerCase() === lastResult.result.color?.toLowerCase()
+        );
+
+      case "size":
+        const resultSize = lastResult.result.number >= 5 ? "big" : "small";
+        return selection?.toLowerCase() === resultSize;
+
+      default:
+        console.warn("Unknown bet type:", type);
+        return false;
+    }
+  };
+
+  //caclculate win amount
+
+  const calculateWinAmount = () => {
+    if (!processWin() || !currentBet?.bet) {
+      return 0;
+    }
+
+    const { type, totalAmount } = currentBet.bet;
+
+    // Different multipliers for different bet types
+    switch (type) {
+      case "number":
+        return totalAmount * 9; // 1:9 payout for number bets
+      case "color":
+        return totalAmount * 2; // 1:2 payout for color bets
+      case "size":
+        return totalAmount * 2; // 1:2 payout for size bets
+      default:
+        return totalAmount * 2;
+    }
+  };
+
   // Mock numbers array for NumberSelection component
   const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -409,11 +466,9 @@ const Game = () => {
       <GameStatus
         balance={balance}
         onShowHistory={() => setShowHistory(true)}
-        selectedBet={selectedBet}
         currentBet={currentBet}
         selectedPeriod={selectedPeriod}
         gamePhase={gamePhase}
-        lastResult={lastResult}
       />
 
       {/* Bet Confirmation Dialog */}
@@ -445,13 +500,13 @@ const Game = () => {
 
       {/* Game Result Dialog */}
       <GameResultDialog
-        open={gamePhase === "result"}
+        open={currentBet?.bet && gamePhase === "result"}
         onClose={() => {}} // Prevent manual closing
         lastResult={lastResult}
         selectedPeriod={selectedPeriod}
         currentPeriod={currentPeriod}
-        userWon={null} // Set to true/false if you track win/loss
-        winAmount={0}
+        userWon={processWin()} // Set to true/false if you track win/loss
+        winAmount={processWin() ? calculateWinAmount() : 0}
       />
     </Container>
   );

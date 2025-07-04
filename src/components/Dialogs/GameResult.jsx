@@ -62,11 +62,17 @@ const GameResultDialog = ({
       }}
     >
       <DialogTitle sx={{ pb: 1, position: "relative" }}>
-        <Typography variant="h6" component="div" textAlign="center" fontWeight="bold">
+        <Typography
+          variant="h6"
+          component="div"
+          textAlign="center"
+          fontWeight="bold"
+        >
           🎯 Game Result
         </Typography>
         <Typography variant="body2" color="text.secondary" textAlign="center">
-          {currentPeriodData?.label} {currentPeriodData?.sublabel} • Period {currentPeriod}
+          {currentPeriodData?.label} {currentPeriodData?.sublabel} • Period{" "}
+          {currentPeriod}
         </Typography>
         <IconButton
           onClick={onClose}
@@ -87,7 +93,7 @@ const GameResultDialog = ({
             {/* Result Circle */}
             <Box sx={{ mb: 3 }}>
               <ResultCircle
-                color={lastResult.color}
+                color={lastResult.result?.color}
                 sx={{
                   width: 80,
                   height: 80,
@@ -95,47 +101,59 @@ const GameResultDialog = ({
                   fontWeight: "bold",
                   mx: "auto",
                   boxShadow: 3,
-                  border: `4px solid ${getResultColor(lastResult.color)}`,
+                  border: `4px solid ${getResultColor(
+                    lastResult.result?.color
+                  )}`,
                 }}
               >
-                {lastResult.number}
+                {lastResult.result?.number}
               </ResultCircle>
             </Box>
 
             {/* Result Details */}
             <Box sx={{ mb: 3 }}>
               <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
-                {lastResult.number}
+                {lastResult.result?.number}
               </Typography>
-              
-              <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 2 }}>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: 2,
+                  mb: 2,
+                }}
+              >
                 <Box
                   sx={{
                     px: 2,
                     py: 1,
                     borderRadius: 2,
-                    bgcolor: getResultColor(lastResult.color),
+                    bgcolor: getResultColor(lastResult.result?.color),
                     color: "white",
                     minWidth: 60,
                   }}
                 >
                   <Typography variant="body2" fontWeight="bold">
-                    {lastResult.color}
+                    {lastResult.result?.color}
                   </Typography>
                 </Box>
-                
+
                 <Box
                   sx={{
                     px: 2,
                     py: 1,
                     borderRadius: 2,
-                    bgcolor: lastResult.number >= 5 ? "success.main" : "warning.main",
+                    bgcolor:
+                      lastResult.result?.number >= 5
+                        ? "success.main"
+                        : "warning.main",
                     color: "white",
                     minWidth: 60,
                   }}
                 >
                   <Typography variant="body2" fontWeight="bold">
-                    {getResultSize(lastResult.number)}
+                    {getResultSize(lastResult.result?.number)}
                   </Typography>
                 </Box>
               </Box>
@@ -152,7 +170,14 @@ const GameResultDialog = ({
                   mb: 2,
                 }}
               >
-                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                  }}
+                >
                   {userWon ? <TrendingUp /> : <TrendingDown />}
                   <Typography variant="h6" fontWeight="bold">
                     {userWon ? "🎉 You Won!" : "😔 You Lost"}

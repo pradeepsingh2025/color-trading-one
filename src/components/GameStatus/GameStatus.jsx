@@ -7,11 +7,9 @@ import { GAME_PERIODS } from "../../constants/GameConstants";
 const GameStatus = ({
   balance,
   onShowHistory,
-  selectedBet,
   currentBet,
   selectedPeriod,
   gamePhase,
-  lastResult,
 }) => {
   const currentPeriodData = GAME_PERIODS[selectedPeriod];
 
