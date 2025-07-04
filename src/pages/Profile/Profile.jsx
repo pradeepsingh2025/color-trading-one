@@ -18,8 +18,6 @@ const Profile = ({
   totalWithdrawals = 0,
 
   // Event Handlers
-  onDeposit,
-  onWithdraw,
   onMenuItemClick,
   onNotificationClick,
 }) => {

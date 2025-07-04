@@ -13,9 +13,7 @@ import GameStatus from "../GameStatus/GameStatus";
 import BetConfirmationDialog from "../Dialogs/BetConfirmationDialog";
 import HowToPlayDialog from "../Dialogs/HowToPlayDialog";
 import HistoryDialog from "../Dialogs/HistoryDialog";
-
-// Import utilities and constants
-import { GAME_PERIODS } from "../../constants/GameConstants";
+import GameResultDialog from "../Dialogs/GameResult";
 
 const Game = () => {
   // Socket connection
@@ -57,7 +55,7 @@ const Game = () => {
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [showBetPopup, setShowBetPopup] = useState(false);
 
-  const [gamePhase, setGamePhase] = useState("betting");
+  const [gamePhase, setGamePhase] = useState();
   const [lastResult, setLastResult] = useState(null);
 
   // const [userId] = useState(user.userID);
@@ -74,7 +72,6 @@ const Game = () => {
 
     // Connection event handlers
     socket.current.on("connect", () => {
-      console.log("Connected to server:", socket.current.id);
       setIsConnected(true);
 
       // Request user balance on connection
@@ -82,7 +79,6 @@ const Game = () => {
     });
 
     socket.current.on("disconnect", () => {
-      console.log("Disconnected from server");
       setIsConnected(false);
     });
 
@@ -91,7 +87,6 @@ const Game = () => {
       //state from backend has the following structure
       // state = {phase, timeRemaining, round, lastResult}
 
-      console.log("Received 30s game state:", state);
       setGameStates((prev) => ({ ...prev, "30s": state }));
       updateUIFromGameState("30s", state);
     });
@@ -100,7 +95,6 @@ const Game = () => {
       //state from backend has the following structure
       // state = {phase, timeRemaining, round, lastResult}
 
-      console.log("Received 1m game state:", state);
       setGameStates((prev) => ({ ...prev, "1m": state }));
       updateUIFromGameState("1m", state);
     });
@@ -109,7 +103,6 @@ const Game = () => {
       //state from backend has the following structure
       // state = {phase, timeRemaining, round, lastResult}
 
-      console.log("Received 3m game state:", state);
       setGameStates((prev) => ({ ...prev, "3m": state }));
       updateUIFromGameState("3m", state);
     });
@@ -118,7 +111,6 @@ const Game = () => {
       //state from backend has the following structure
       // state = {phase, timeRemaining, round, lastResult}
 
-      console.log("Received 5m game state:", state);
       setGameStates((prev) => ({ ...prev, "5m": state }));
       updateUIFromGameState("5m", state);
     });
@@ -147,26 +139,38 @@ const Game = () => {
     // Game result
     socket.current.on("gameResult", (data) => {
       const { gameType, result, round } = data;
-      console.log("Game result received:", data);
 
-      
+      // update game history via http
+
       setGameResults((prev) => ({
         ...prev,
-        [gameType]: [{ ...result, round }, ...prev[gameType].slice(0, 14)],
+        [gameType]: [{ gameType, result, round }, ...prev[gameType]],
       }));
 
       // If this is the selected period, update phase
       if (gameType === selectedPeriodRef.current) {
-        setGamePhase("result");
+        console.log("check");
         setLastResult(result);
+
+        // setGamePhase("result")
+
+        setGamePhase((prevPhase) => {
+          if (prevPhase === "result") {
+            console.log(
+              "Keeping result phase from gameresult, ignoring timer phase:",
+              phase
+            );
+            return prevPhase; // Don't override result phase
+          }
+          return "betting";
+        });
       }
-      getUserBalance()
+      getUserBalance();
     });
 
     // New round started
     socket.current.on("newRound", (data) => {
       const { gameType, newState } = data;
-      console.log("New round started:", data);
 
       //newState = {phase, timeRemaining, round, lastResult}
 
@@ -185,8 +189,11 @@ const Game = () => {
 
     // Bet placed confirmation
     socket.current.on("betPlaced", (data) => {
-      console.log("Bet placed confirmation:", data);
-      setCurrentBet(data.bet);
+      console.log(data);
+      setCurrentBet({
+        gameType: data.gameType,
+        displayName: data.bet.displayName,
+      });
       setShowBetPopup(false);
 
       // Update balance after bet
@@ -195,17 +202,15 @@ const Game = () => {
 
     // User balance
     socket.current.on("userBalance", (data) => {
-      console.log("User balance received:", data);
       setBalance(data.balance);
-      console.log("user balance", data.balance);
     });
 
     // Current bet
-    socket.current.on("currentBet", (data) => {
-      if (data.bet) {
-        setCurrentBet(data.bet);
-      }
-    });
+    // socket.current.on("currentBet", (data) => {
+    //   if (data.bet) {
+    //     setCurrentBet(data);
+    //   }
+    // });
 
     // Error handling
     socket.current.on("error", (error) => {
@@ -215,28 +220,55 @@ const Game = () => {
 
     return () => {
       if (socket.current) {
+        socket.current.off();
         socket.current.disconnect();
       }
     };
   }, []);
 
-  // Update UI when selected period changes
+  //fetches game history via http req
 
+  useEffect(() => {
+    fetch(
+      `http://localhost:3001/api/game/history?gameType=${selectedPeriod}&limit=${50}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    )
+      .then(async (res) => {
+        const history = await res.json();
+
+        if (res.ok) {
+          setGameResults((prev) => ({
+            ...prev,
+            [history[0].gameType]: history,
+          }));
+        } else {
+          return;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching game history:", error);
+      });
+  }, [selectedPeriod]);
+
+  // Update UI when selected period changes
   useEffect(() => {
     const currentGameState = gameStates[selectedPeriod];
     if (currentGameState) {
       updateUIFromGameState(selectedPeriodRef.current, currentGameState);
     }
     // Get current bet for the selected period
-    getCurrentBet();
-  }, [selectedPeriod, gameStates]);
+    // getCurrentBet();
+  }, [selectedPeriod, gameResults]);
 
   const updateUIFromGameState = (gameType, state) => {
     if (gameType === selectedPeriodRef.current) {
       setTimeRemaining(state.timeRemaining);
       setGamePhase(state.phase);
       setCurrentPeriod(state.round); //current period === round
-      setLastResult(state.lastResult);
+      // setLastResult(state.lastResult); //this causing second lasresult in lastresult
     }
   };
 
@@ -248,19 +280,18 @@ const Game = () => {
     }
   };
 
-  const getCurrentBet = () => {
-    if (socket.current && socket.current.connected) {
-      socket.current.emit("getCurrentBet", {
-        userId: user.userId,
-        gameType: selectedPeriod,
-      });
-    }
-  };
+  // const getCurrentBet = () => {
+  //   if (socket.current && socket.current.connected) {
+  //     socket.current.emit("getCurrentBet", {
+  //       userId: user.userId,
+  //       gameType: selectedPeriod,
+  //     });
+  //   }
+  // };
 
   const handlePeriodChange = (period) => {
     setSelectedPeriod(period);
     setSelectedBet(null);
-    setCurrentBet(null);
     setShowBetPopup(false);
 
     // Update UI from the new period's game state
@@ -310,8 +341,6 @@ const Game = () => {
     } else if (selectedBet.type === "size") {
       betData.bet.size = selectedBet.value;
     }
-
-    console.log("Placing bet:", betData);
     socket.current.emit("placeBet", betData);
   };
 
@@ -381,6 +410,7 @@ const Game = () => {
         balance={balance}
         onShowHistory={() => setShowHistory(true)}
         selectedBet={selectedBet}
+        currentBet={currentBet}
         selectedPeriod={selectedPeriod}
         gamePhase={gamePhase}
         lastResult={lastResult}
@@ -411,6 +441,17 @@ const Game = () => {
         onClose={() => setShowHistory(false)}
         selectedPeriod={selectedPeriod}
         gameResults={gameResults}
+      />
+
+      {/* Game Result Dialog */}
+      <GameResultDialog
+        open={gamePhase === "result"}
+        onClose={() => {}} // Prevent manual closing
+        lastResult={lastResult}
+        selectedPeriod={selectedPeriod}
+        currentPeriod={currentPeriod}
+        userWon={null} // Set to true/false if you track win/loss
+        winAmount={0}
       />
     </Container>
   );

@@ -20,6 +20,8 @@ const GameInfo = ({
   const currentPeriodData = GAME_PERIODS[selectedPeriod];
   const currentResults = gameResults[selectedPeriod];
 
+  // console.log("gameresults from gameInfo", gameResults)
+
   return (
     <TimerBox mb={2}>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -45,11 +47,11 @@ const GameInfo = ({
                   height: 24,
                   fontSize: '0.75rem',
                   fontWeight: 'bold',
-                  bgcolor: result.color === 'green' ? 'success.main' :
-                          result.color === 'violet' ? 'secondary.main' : 'error.main'
+                  bgcolor: result.result.color === 'green' ? 'success.main' :
+                          result.result.color === 'violet' ? 'secondary.main' : 'error.main'
                 }}
               >
-                {result.number}
+                {result.result.number}
               </Avatar>
             ))}
           </Stack>

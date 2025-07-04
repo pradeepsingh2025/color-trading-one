@@ -20,7 +20,7 @@ const HistoryDialog = ({ open, onClose, selectedPeriod, gameResults }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>
-        Game History - {currentPeriodData.label} {currentPeriodData.sublabel}
+        Game History - {currentPeriodData.label}, {currentPeriodData.sublabel}
         <IconButton
           onClick={onClose}
           sx={{ position: 'absolute', right: 8, top: 8 }}
@@ -39,16 +39,16 @@ const HistoryDialog = ({ open, onClose, selectedPeriod, gameResults }) => {
                     height: 32,
                     fontSize: '0.875rem',
                     fontWeight: 'bold',
-                    bgcolor: result.color === 'green' ? 'success.main' :
-                            result.color === 'violet' ? 'secondary.main' : 'error.main'
+                    bgcolor: result.result.color === 'green' ? 'success.main' :
+                            result.result.color === 'violet' ? 'secondary.main' : 'error.main'
                   }}
                 >
-                  {result.number}
+                  {result.result.number}
                 </Avatar>
               </ListItemIcon>
               <ListItemText
-                primary={`Number: ${result.number}`}
-                secondary={`Color: ${result.color}`}
+                primary={`Number: ${result.result.number} | Color: ${result.result.color} | Size: ${result.result.size}`}
+                secondary={`Round: ${result.round}`}
               />
             </ListItem>
           ))}
