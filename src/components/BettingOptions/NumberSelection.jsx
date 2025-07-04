@@ -1,6 +1,6 @@
-import React from 'react';
-import { Grid } from '@mui/material';
-import { NumberButton } from '../styled/StyledComponents';
+import React from "react";
+import { Grid } from "@mui/material";
+import { NumberButton } from "../styled/StyledComponents";
 
 const NumberSelection = ({ selectedBet, gamePhase, onSelection, numbers }) => {
   return (
@@ -10,9 +10,11 @@ const NumberSelection = ({ selectedBet, gamePhase, onSelection, numbers }) => {
           <NumberButton
             fullWidth
             number={number}
-            selected={selectedBet?.type === 'number' && selectedBet?.value === number}
-            disabled={gamePhase !== 'betting'}
-            onClick={() => onSelection('number', number, `Number ${number}`)}
+            selected={
+              selectedBet?.type === "number" && selectedBet?.value === number
+            }
+            disabled={gamePhase !== "betting"}
+            onClick={() => onSelection("number", number, `Number ${number}`)}
           >
             {number}
           </NumberButton>

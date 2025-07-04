@@ -149,7 +149,7 @@ const Game = () => {
       const { gameType, result, round } = data;
       console.log("Game result received:", data);
 
-      setLastResult(result);
+      
       setGameResults((prev) => ({
         ...prev,
         [gameType]: [{ ...result, round }, ...prev[gameType].slice(0, 14)],
@@ -158,7 +158,9 @@ const Game = () => {
       // If this is the selected period, update phase
       if (gameType === selectedPeriodRef.current) {
         setGamePhase("result");
+        setLastResult(result);
       }
+      getUserBalance()
     });
 
     // New round started

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Stack } from '@mui/material';
-import { SizeButton } from '../styled/StyledComponents';
+import React from "react";
+import { Stack } from "@mui/material";
+import { SizeButton } from "../styled/StyledComponents";
 
 const SizeSelection = ({ selectedBet, gamePhase, onSelection }) => {
   //{type, value, displayName}
@@ -10,9 +10,9 @@ const SizeSelection = ({ selectedBet, gamePhase, onSelection }) => {
         fullWidth
         variant="contained"
         size="big"
-        selected={selectedBet?.type === 'big'}
-        disabled={gamePhase !== 'betting'}
-        onClick={() => onSelection('size', 'big', 'Big (5-9)')}
+        selected={selectedBet?.type === "size" && selectedBet?.value === "big"}
+        disabled={gamePhase !== "betting"}
+        onClick={() => onSelection("size", "big", "Big (5-9)")}
       >
         Big (5-9)
       </SizeButton>
@@ -20,9 +20,11 @@ const SizeSelection = ({ selectedBet, gamePhase, onSelection }) => {
         fullWidth
         variant="contained"
         size="small"
-        selected={selectedBet?.type === 'small'}
-        disabled={gamePhase !== 'betting'}
-        onClick={() => onSelection('size', 'small', 'Small (0-4)')}
+        selected={
+          selectedBet?.type === "size" && selectedBet?.value === "small"
+        }
+        disabled={gamePhase !== "betting"}
+        onClick={() => onSelection("size", "small", "Small (0-4)")}
       >
         Small (0-4)
       </SizeButton>
