@@ -13,10 +13,6 @@ import { useNavigate } from "react-router";
 const Profile = ({
   avatarUrl = "https://via.placeholder.com/80x80",
 
-  // Stats Props
-  totalDeposits = 0,
-  totalWithdrawals = 0,
-
   // Event Handlers
   onMenuItemClick,
   onNotificationClick,
@@ -27,8 +23,6 @@ const Profile = ({
   useEffect(() => {
     refreshUserBalance();
   }, []);
-
-  console.log("user data from profile component", user);
 
   const lastlogin = new Date(user.createdAt);
 
@@ -79,10 +73,7 @@ const Profile = ({
         <WalletBalance />
 
         {/* Quick Stats */}
-        <QuickStats
-          totalDeposits={totalDeposits}
-          totalWithdrawals={totalWithdrawals}
-        />
+        <QuickStats totalBets={user.totalBets} totalWins={user.totalWins} />
 
         {/* Menu Grid */}
         <Histories onMenuItemClick={handleMenuItemClick} />
