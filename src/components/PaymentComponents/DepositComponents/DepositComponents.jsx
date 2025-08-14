@@ -188,7 +188,7 @@ export default function WalletDepositInterface() {
                 <AccountBalanceWallet sx={{ fontSize: 30 }} />
               </Box>
               <Typography variant="h3" sx={{ fontWeight: "bold", mb: 1 }}>
-                ₹{user.wallet.balance.toLocaleString()}
+                ₹{user?.wallet?.balance.toLocaleString()}
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.9 }}>
                 Available for transactions

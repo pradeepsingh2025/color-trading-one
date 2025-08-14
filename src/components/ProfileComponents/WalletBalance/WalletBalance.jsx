@@ -68,7 +68,7 @@ const WalletBalance = () => {
             letterSpacing: "-1px",
           }}
         >
-          {showBalance ? `₹${user.wallet.balance}` : "₹***"}
+          {showBalance ? `₹${user?.wallet?.balance || 0}` : "₹***"}
         </Typography>
 
         {/* Action Buttons */}

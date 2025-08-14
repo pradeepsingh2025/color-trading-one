@@ -24,7 +24,7 @@ const Profile = ({
     refreshUserBalance();
   }, []);
 
-  const lastlogin = new Date(user.createdAt);
+  const lastlogin = new Date(user?.createdAt);
 
   const formattedDate = lastlogin.toLocaleString("en-IN", {
     day: "2-digit",
@@ -62,7 +62,7 @@ const Profile = ({
       >
         {/* Profile Header */}
         <ProfileHeader
-          uid={user.userId}
+          uid={user?.userId}
           avatarUrl={avatarUrl}
           lastLogin={formattedDate}
         />
@@ -73,7 +73,7 @@ const Profile = ({
         <WalletBalance />
 
         {/* Quick Stats */}
-        <QuickStats totalBets={user.totalBets} totalWins={user.totalWins} />
+        <QuickStats totalBets={user?.totalBets || 0} totalWins={user?.totalWins || 0} />
 
         {/* Menu Grid */}
         <Histories onMenuItemClick={handleMenuItemClick} />
