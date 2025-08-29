@@ -30,7 +30,7 @@ import { NavLink } from "react-router-dom";
 export default function SignUpPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    phoneNumber: "",
+    email: "",
     password: "",
     confirmPassword: "",
     referralCode: "",
@@ -94,11 +94,12 @@ export default function SignUpPage() {
   const validateForm = () => {
     const newErrors = {};
 
-    // Phone number validation
-    if (!formData.phoneNumber.trim()) {
-      newErrors.phoneNumber = "Phone number is required";
-    } else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(formData.phoneNumber.trim())) {
-      newErrors.phoneNumber = "Please enter a valid phone number";
+
+    //Email validator
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(formData.email.trim())) {
+      newErrors.email = "Please enter a valid email address";
     }
 
     // Password validation
@@ -107,6 +108,7 @@ export default function SignUpPage() {
     } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
     }
+
 
     // Confirm password validation
     if (!formData.confirmPassword) {
@@ -138,7 +140,7 @@ export default function SignUpPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phone: formData.phoneNumber,
+          email: formData.email,
           password: formData.password,
         }),
       });
@@ -151,7 +153,7 @@ export default function SignUpPage() {
 
         setSubmitMessage(data.message); //'Account created successfully!'
         setFormData({
-          phoneNumber: "",
+          email: "",
           password: "",
           confirmPassword: "",
           referralCode: "",
@@ -291,16 +293,16 @@ export default function SignUpPage() {
 
           {/* Sign Up Form */}
           <Box component="form" onSubmit={handleSignUp}>
-            {/* Phone Number Field */}
+            {/* Email Field */}
             <TextField
               fullWidth
-              label="Phone Number"
+              label="Email"
               variant="outlined"
-              value={formData.phoneNumber}
-              onChange={handleInputChange("phoneNumber")}
-              error={!!errors.phoneNumber}
-              helperText={errors.phoneNumber}
-              placeholder="9214266534"
+              value={formData.email}
+              onChange={handleInputChange("email")}
+              error={!!errors.email}
+              helperText={errors.email}
+              placeholder="example@account.com"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

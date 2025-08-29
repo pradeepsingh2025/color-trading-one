@@ -8,7 +8,6 @@ import {
   TextField,
   Button,
   Typography,
-  Link,
   InputAdornment,
   IconButton,
   Alert,
@@ -25,7 +24,7 @@ import {
 export default function LoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    phoneNumber: "",
+    email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -69,11 +68,11 @@ export default function LoginPage() {
   const validateForm = () => {
     const newErrors = {};
 
-    // Phone number validation
-    if (!formData.phoneNumber.trim()) {
-      newErrors.phoneNumber = "Phone number is required";
-    } else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(formData.phoneNumber.trim())) {
-      newErrors.phoneNumber = "Please enter a valid phone number";
+    //Email validator
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(formData.email.trim())) {
+      newErrors.email = "Please enter a valid email address";
     }
 
     // Password validation
@@ -100,7 +99,7 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          phone: formData.phoneNumber,
+          email: formData.email,
           password: formData.password,
         }),
       });
@@ -124,13 +123,13 @@ export default function LoginPage() {
     }
   };
 
-  const handleForgotPassword = () => {
-    alert(
-      "Forgot password functionality would redirect to password reset page"
-    );
-  };
+  // const handleForgotPassword = () => {
+  //   alert(
+  //     "Forgot password functionality would redirect to password reset page"
+  //   );
+  // };
 
-  const keywords = ["error", "not", "Invalid", "required"];
+  // const keywords = ["error", "not", "Invalid", "required"];
 
   return (
     <Box
@@ -228,16 +227,16 @@ export default function LoginPage() {
 
           {/* Login Form */}
           <Box component="form" onSubmit={handleLogin}>
-            {/* Phone Number Field */}
+            {/* Email Field */}
             <TextField
               fullWidth
-              label="Phone Number"
+              label="Email"
               variant="outlined"
-              value={formData.phoneNumber}
-              onChange={handleInputChange("phoneNumber")}
-              error={!!errors.phoneNumber}
-              helperText={errors.phoneNumber}
-              placeholder="9214266534"
+              value={formData.email}
+              onChange={handleInputChange("email")}
+              error={!!errors.email}
+              helperText={errors.email}
+              placeholder="xyz@gmail.com"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

@@ -3,6 +3,8 @@ const cors = require('cors');
 
 const app = express();
 
+//checking push from nitro
+
 // CORS configuration
 app.use(cors({
   origin: 'http://localhost:5173', // frontend origin
