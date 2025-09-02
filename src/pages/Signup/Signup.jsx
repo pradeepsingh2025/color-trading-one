@@ -161,7 +161,7 @@ export default function SignUpPage() {
 
         // Redirect to home page after successful signup
         setTimeout(() => {
-          navigate("/", { state: data.user });
+          navigate("/otp-verification", { state: data.user });
         }, 1500); // Small delay to show success message
       } else {
         setSubmitMessage(
@@ -280,7 +280,7 @@ export default function SignUpPage() {
                 {submitMessage}
                 {submitMessage.includes("successfully") && (
                   <Typography variant="body2" sx={{ mt: 1 }}>
-                    Redirecting to home page...
+                    Verify your email...
                   </Typography>
                 )}
               </Alert>
