@@ -115,9 +115,11 @@ const OTPVerification = () => {
             });
 
             const data = await response.json()
+            console.log("cheFF11-data", data)
             if (response.ok) {
                 setSuccess(true);
                 setSubmitMessage(data.message)
+                console.log("cheFF22-data.message", data.message)
                 setTimeout(() => {
                     navigate("/")
                 }, 1500)
