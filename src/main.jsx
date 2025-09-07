@@ -1,6 +1,7 @@
 import {
   createBrowserRouter,
   RouterProvider,
+  Navigate
 } from "react-router";
 
 import Home from "./Home";
@@ -21,10 +22,19 @@ import OTPVerification from "./pages/OTP/otp";
 
 import ReactDOM from "react-dom/client";
 
+
+function ProtectedRoute({ element }) {
+  const verified = localStorage.getItem("user");
+  return verified ? element : <Navigate to="/login" replace />
+}
+
+
+
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <ProtectedRoute element={<Layout />} />,
     children: [
       {
         path: '',
@@ -66,7 +76,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/otp-verification',
-    element: <OTPVerification />
+    element: localStorage.getItem("otpSession") ? <OTPVerification /> : <Navigate to="/login" />
   },
   {
     path: '/adminlogin',

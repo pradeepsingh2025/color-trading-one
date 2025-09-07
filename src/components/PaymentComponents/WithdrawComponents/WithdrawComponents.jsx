@@ -25,11 +25,15 @@ import { useUser } from "../../../context/UserContext";
 const WalletWithdraw = () => {
   const { user, refreshUserBalance } = useUser();
 
-  const [walletBalance, setWalletBalance] = useState(user.wallet.balance);
+  const [walletBalance, setWalletBalance] = useState(user?.wallet?.balance);
   const [upiId, setUpiId] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [amountError, setAmountError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    refreshUserBalance();
+  }, []);
 
   const validateAmount = (amount) => {
     const numAmount = parseFloat(amount);

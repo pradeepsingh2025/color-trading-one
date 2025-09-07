@@ -276,7 +276,7 @@ const Game = () => {
   const getUserBalance = () => {
     if (socket.current && socket.current.connected) {
       socket.current.emit("getUserBalance", {
-        userId: user.userId,
+        userId: user?.userId,
       });
     }
   };
@@ -322,7 +322,7 @@ const Game = () => {
 
     // Create bet object based on selection type
     let betData = {
-      userId: user.userId,
+      userId: user?.userId,
       gameType: selectedPeriod,
       bet: {
         amount: betAmount,

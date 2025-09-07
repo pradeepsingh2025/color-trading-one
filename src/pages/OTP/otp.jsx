@@ -47,7 +47,7 @@ const OTPVerification = () => {
     const inputRefs = useRef([]);
 
     // Email passed from previous screen
-    const email = formData.email;
+    const email = formData?.email;
 
     useEffect(() => {
         if (resendCooldown > 0) {
@@ -115,11 +115,11 @@ const OTPVerification = () => {
             });
 
             const data = await response.json()
-            console.log("cheFF11-data", data)
+
             if (response.ok) {
-                setSuccess(true);
+
                 setSubmitMessage(data.message)
-                console.log("cheFF22-data.message", data.message)
+                localStorage.removeItem("otpSession");
                 setTimeout(() => {
                     navigate("/")
                 }, 1500)
@@ -147,18 +147,14 @@ const OTPVerification = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email: formData.email
+                    email: formData?.email
                 }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                setSuccess(true);
-                setSubmitMessage(data.message)
-                setTimeout(() => {
-                    navigate("/")
-                }, 1500)
+                setError(data.message);
 
             } else {
                 setError(data.error || 'Invalid OTP. Please try again.');
@@ -269,13 +265,13 @@ const OTPVerification = () => {
                         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
                             We've sent a 6-digit code to{' '}
                             <Typography component="span" fontWeight={600}>
-                                {email.substring(0, 3) + "***"}
+                                {email?.substring(0, 3) + "***"}
                             </Typography>
                         </Typography>
 
                         {/* Error Alert */}
                         {error && (
-                            <Alert severity="error" sx={{ mb: 3 }}>
+                            <Alert severity={error.includes("resent") ? "success" : "error"} sx={{ mb: 3 }}>
                                 {error}
                             </Alert>
                         )}

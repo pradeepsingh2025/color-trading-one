@@ -150,6 +150,8 @@ export default function SignUpPage() {
       if (response.ok) {
         // Store the JWT token
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("otpSession", JSON.stringify(data.user.otpSession));
 
         setSubmitMessage(data.message); //'Account created successfully!'
         setFormData({
@@ -168,7 +170,6 @@ export default function SignUpPage() {
           data.error || "Error creating account. Please try again."
         );
       }
-      console.log(data.user);
 
       // alert(`Successfully signedUp, UID is ${data.user.userID}`);
     } catch (error) {
