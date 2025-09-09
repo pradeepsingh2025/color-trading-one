@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Container } from "@mui/material";
 import { io } from "socket.io-client";
 import { useUser } from "../../context/UserContext";
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Import all components
 import GameTypeSelector from "../GameTypeSelector/GameTypeSelector";
@@ -66,7 +67,7 @@ const Game = () => {
   }, [selectedPeriod]);
 
   useEffect(() => {
-    socket.current = io("http://localhost:3001", {
+    socket.current = io(`${API_URL}`, {
       transports: ["websocket", "polling"],
     });
 
@@ -231,7 +232,7 @@ const Game = () => {
 
   useEffect(() => {
     fetch(
-      `http://localhost:3001/api/game/history?gameType=${selectedPeriod}&limit=${50}`,
+      `${API_URL}/api/game/history?gameType=${selectedPeriod}&limit=${50}`,
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },

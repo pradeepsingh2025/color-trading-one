@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const UserContext = createContext(null);
 
@@ -13,7 +14,7 @@ export const UserProvider = ({ children }) => {
 
   const refreshUserBalance = async () => {
     try {
-      fetch("http://localhost:3001/api/user/wallet/balance", {
+      fetch(`${API_URL}/api/user/wallet/balance`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

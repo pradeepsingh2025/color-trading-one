@@ -19,6 +19,8 @@ import TransactionFilters from "../../admin/TransactionFilter/TransactionFilter"
 import ActionDialog from "../../admin/ActionDialog/ActionDialog";
 import NotificationSnackbar from "../../admin/NotificationSnackbar/NotificationSnackbar";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function AdminPanel() {
   const navigate = useNavigate();
 
@@ -62,7 +64,7 @@ function AdminPanel() {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/admin/alltransactions?page=${page}`, {
+    fetch(`${API_URL}/api/admin/alltransactions?page=${page}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -98,7 +100,7 @@ function AdminPanel() {
   }, [navigate, loading, page]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/admin/transactions/stats", {
+    fetch(`${API_URL}/api/admin/transactions/stats`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -136,7 +138,7 @@ function AdminPanel() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/admin/transactions/${selectedTransaction._id}/${actionType}`,
+        `${API_URL}/api/admin/transactions/${selectedTransaction._id}/${actionType}`,
         {
           method: "PUT",
           headers: {
@@ -157,14 +159,14 @@ function AdminPanel() {
         const updatedTransactions = transactions.map((t) =>
           t._id === selectedTransaction._id
             ? {
-                ...t,
-                status:
-                  actionType === "approve"
-                    ? "PROCESSING"
-                    : actionType === "complete"
+              ...t,
+              status:
+                actionType === "approve"
+                  ? "PROCESSING"
+                  : actionType === "complete"
                     ? "COMPLETED"
                     : "REJECTED",
-              }
+            }
             : t
         );
 

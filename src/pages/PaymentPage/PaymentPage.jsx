@@ -20,6 +20,8 @@ import {
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const PaymentPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -87,7 +89,7 @@ const PaymentPage = () => {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch("http://localhost:3001/api/user/deposit", {
+      const response = await fetch(`${API_URL}/api/user/deposit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

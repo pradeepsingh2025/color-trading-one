@@ -15,6 +15,8 @@ import { ArrowBack, Refresh } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const theme = createTheme({
     palette: {
         primary: {
@@ -103,7 +105,7 @@ const OTPVerification = () => {
         setError('');
 
         try {
-            const response = await fetch("http://localhost:3001/api/user/verify", {
+            const response = await fetch(`${API_URL}/api/user/verify`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -141,7 +143,7 @@ const OTPVerification = () => {
         setError('');
 
         try {
-            const response = await fetch("http://localhost:3001/api/user/otpresent", {
+            const response = await fetch(`${API_URL}/api/user/otpresent`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

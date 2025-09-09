@@ -26,6 +26,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function SignUpPage() {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ export default function SignUpPage() {
     setSubmitMessage("");
 
     try {
-      const response = await fetch("http://localhost:3001/api/user/signup", {
+      const response = await fetch(`${API_URL}/api/user/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
