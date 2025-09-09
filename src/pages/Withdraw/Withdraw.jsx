@@ -1,5 +1,4 @@
-import React from 'react'
-import WalletWithdraw from '../../components/PaymentComponents/Withdrawcomponents/Withdrawcomponents'
+import WalletWithdraw from '../../components/PaymentComponents/WithdrawComponents/WithdrawComponents'
 
 const Withdraw = () => {
   return (
@@ -9,4 +8,4 @@ const Withdraw = () => {
   )
 }
 
-export default Withdraw
+export default Withdraw;
