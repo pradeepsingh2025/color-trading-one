@@ -223,7 +223,7 @@ export default function SignUpPage() {
               textDecoration: "none",
             }}
           >
-            Bet Your Chance
+            Your Chance
           </Typography>
           <Typography component="h1" variant="h6">
             A betting platform.
