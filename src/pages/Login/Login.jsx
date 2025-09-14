@@ -165,7 +165,7 @@ export default function LoginPage() {
               textDecoration: "none",
             }}
           >
-            68LOTTERY
+            Bet Your Chance
           </Typography>
           <Typography component="h1" variant="h6">
             A betting platform.

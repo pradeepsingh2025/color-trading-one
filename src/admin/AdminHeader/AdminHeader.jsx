@@ -8,7 +8,7 @@ const AdminHeader = ({ onRefresh }) => {
       <Toolbar>
         <Dashboard sx={{ mr: 2 }} />
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          68LOTTERY - Admin Dashboard
+          Bet Your Chance - Admin Dashboard
         </Typography>
         <IconButton color="inherit" onClick={onRefresh}>
           <Refresh />

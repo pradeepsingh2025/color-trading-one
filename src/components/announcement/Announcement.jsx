@@ -37,7 +37,7 @@ export default function AnnouncementSection() {
           lineHeight: 1
         }}
       >
-        Welcome to 68lottery game platform, we will serve you wholeheartedly!
+        Welcome to Bet Your Chance game platform, we will serve you wholeheartedly!
       </Typography>
      
     </Box>
