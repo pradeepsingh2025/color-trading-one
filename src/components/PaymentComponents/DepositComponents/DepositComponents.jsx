@@ -248,7 +248,7 @@ export default function WalletDepositInterface() {
                 row
               >
                 <FormControlLabel
-                  value="7054384368@fam"
+                  value="6386121819@upi"
                   control={<Radio />}
                   label={
                     <Box sx={{ display: "flex", alignItems: "center" }}>
