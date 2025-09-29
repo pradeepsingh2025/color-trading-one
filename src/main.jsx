@@ -24,8 +24,21 @@ import ReactDOM from "react-dom/client";
 
 
 function ProtectedRoute({ element }) {
-  const verified = localStorage.getItem("user");
-  return verified ? element : <Navigate to="/login" replace />
+  const otpSession = localStorage.getItem("otpSession");
+  if (otpSession) {
+    return <Navigate to="/otp-verification" replace />;
+  }
+
+  // Check if user is authenticated
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+
+  if (!token || !user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // User is authenticated and verified
+  return element;
 }
 
 

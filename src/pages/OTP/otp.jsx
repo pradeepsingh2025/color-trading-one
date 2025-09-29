@@ -121,6 +121,8 @@ const OTPVerification = () => {
             if (response.ok) {
 
                 setSubmitMessage(data.message)
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user));
                 localStorage.removeItem("otpSession");
                 setTimeout(() => {
                     navigate("/")
@@ -249,9 +251,7 @@ const OTPVerification = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                             <IconButton
                                 sx={{ mr: 1, p: 0.5 }}
-                                onClick={() => {
-                                    useNavigate("/signup")
-                                }}
+                                onClick={() => navigate("/signup")}
                             >
                                 <ArrowBack />
                             </IconButton>

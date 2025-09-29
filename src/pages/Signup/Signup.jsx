@@ -150,9 +150,7 @@ export default function SignUpPage() {
 
       if (response.ok) {
         // Store the JWT token
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("otpSession", JSON.stringify(data.user.otpSession));
+        localStorage.setItem("otpSession", JSON.stringify(data.otpSession));
 
         setSubmitMessage(data.message); //'Account created successfully!'
         setFormData({
@@ -164,8 +162,8 @@ export default function SignUpPage() {
 
         // Redirect to home page after successful signup
         setTimeout(() => {
-          navigate("/otp-verification", { state: data.user });
-        }, 1500); // Small delay to show success message
+          navigate("/otp-verification", {state: data});
+        }, 2000); // Small delay to show success message
       } else {
         setSubmitMessage(
           data.error || "Error creating account. Please try again."
