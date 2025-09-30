@@ -75,6 +75,9 @@ function ResponsiveAppBar() {
             component="a"
             href="/"
             sx={{
+              background: "linear-gradient(90deg, #ff0000, #8a2be2, #00ff66)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
@@ -84,7 +87,7 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            Klay Kolor 
+            Klay Kolor
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
