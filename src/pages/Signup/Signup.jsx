@@ -213,12 +213,14 @@ export default function SignUpPage() {
             component='h1'
             variant="h1"
             style={{
+              background: "linear-gradient(90deg, #ff0000, #8a2be2, #00ff66)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
               textAlign: "start",
               fontSize: "4vmax",
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".1rem",
-              color: "#F79B72",
               textDecoration: "none",
             }}
           >
