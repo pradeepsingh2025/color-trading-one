@@ -170,7 +170,7 @@ export default function LoginPage() {
             Klay Kolor
           </Typography>
           <Typography component="h1" variant="h6">
-            A betting platform.
+            A game platform.
           </Typography>
           <Typography
             component="h1"
@@ -178,7 +178,7 @@ export default function LoginPage() {
             fontSize="5vmax"
             sx={{ marginTop: "3vh", color: "#2A4759" }}
           >
-            Know your limits.
+            Enjoy the predictions
           </Typography>
           <Typography
             component="h1"
@@ -186,7 +186,7 @@ export default function LoginPage() {
             fontSize="3vmax"
             sx={{ color: "#2A4759" }}
           >
-            Bet responsibly.
+            Play for fun.
           </Typography>
           <NavLink to="/customer-service" style={{ marginTop: "30px" }}>
             customer service
