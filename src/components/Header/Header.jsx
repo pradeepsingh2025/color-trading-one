@@ -3,7 +3,8 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import { Typography, keyframes } from "@mui/material";
+
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
@@ -13,6 +14,13 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
 import { NavLink } from "react-router";
+
+
+const wave = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
 
 const pages = [
   {
@@ -75,9 +83,11 @@ function ResponsiveAppBar() {
             component="a"
             href="/"
             sx={{
-              background: "linear-gradient(90deg, #ff0000, #8a2be2, #00ff66)",
+              background: "linear-gradient(270deg, #ff0000, #8a2be2, #00ff66)",
+              backgroundSize: "600% 600%",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
+              animation: `${wave} 6s ease infinite`,
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
