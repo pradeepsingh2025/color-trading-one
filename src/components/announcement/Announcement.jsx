@@ -37,7 +37,7 @@ export default function AnnouncementSection() {
           lineHeight: 1
         }}
       >
-        Welcome to Bet Your Chance game platform, we will serve you wholeheartedly!
+        Welcome to Klay Kolor game platform, we will serve you wholeheartedly!
       </Typography>
      
     </Box>

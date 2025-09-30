@@ -150,7 +150,7 @@ export default function SignUpPage() {
 
       if (response.ok) {
         // Store the JWT token
-        localStorage.setItem("token", data.token);                
+        localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
         setSubmitMessage(data.message); //'Account created successfully!'
@@ -222,10 +222,10 @@ export default function SignUpPage() {
               textDecoration: "none",
             }}
           >
-            Your Chance
+            Klay Kolor
           </Typography>
           <Typography component="h1" variant="h6">
-            A betting platform.
+            A game platform.
           </Typography>
           <Typography
             component="h1"
@@ -233,7 +233,7 @@ export default function SignUpPage() {
             fontSize="5vmax"
             sx={{ marginTop: "3vh", color: "#2A4759" }}
           >
-            Know your limits.
+            Enjoy the predictions.
           </Typography>
           <Typography
             component="h1"
@@ -241,7 +241,7 @@ export default function SignUpPage() {
             fontSize="3vmax"
             sx={{ color: "#2A4759" }}
           >
-            Bet responsibly.
+            Play for fun.
           </Typography>
           <NavLink to="/customer-service" style={{ marginTop: "30px" }}>
             customer service

@@ -84,7 +84,7 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            Bet Your Chance
+            Klay Kolor 
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -142,7 +142,7 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            BetYourChance
+            Klay Kolor
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
