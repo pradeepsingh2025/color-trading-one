@@ -24,11 +24,6 @@ import ReactDOM from "react-dom/client";
 
 
 function ProtectedRoute({ element }) {
-  const otpSession = localStorage.getItem("otpSession");
-  if (otpSession) {
-    return <Navigate to="/otp-verification" replace />;
-  }
-
   // Check if user is authenticated
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
@@ -86,10 +81,6 @@ const router = createBrowserRouter([
   {
     path: '/signup',
     element: <SignupPage />
-  },
-  {
-    path: '/otp-verification',
-    element: localStorage.getItem("otpSession") ? <OTPVerification /> : <Navigate to="/login" />
   },
   {
     path: '/adminlogin',
