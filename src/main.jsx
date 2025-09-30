@@ -18,7 +18,6 @@ import PaymentPage from "./pages/PaymentPage/PaymentPage";
 import Withdraw from "./pages/Withdraw/Withdraw";
 import AdminLogin from "./pages/AdminLogin/AdminLogin"
 import AdminPanel from "./pages/AdminPanel/AdminPanel"
-import OTPVerification from "./pages/OTP/otp";
 
 import ReactDOM from "react-dom/client";
 
