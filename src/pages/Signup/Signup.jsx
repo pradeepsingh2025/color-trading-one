@@ -279,11 +279,6 @@ export default function SignUpPage() {
                 sx={{ mb: 2 }}
               >
                 {submitMessage}
-                {submitMessage.includes("successfully") && (
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    Verify your email...
-                  </Typography>
-                )}
               </Alert>
             ) : (
               <Typography variant="body2" color="text.secondary">
