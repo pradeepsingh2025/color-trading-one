@@ -2,7 +2,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   Navigate
-} from "react-router";
+} from "react-router-dom";
 
 import Home from "./Home";
 import Layout from "./Layout";
