@@ -175,15 +175,15 @@ export default function LoginPage() {
           <Typography
             component="h1"
             variant="h4"
-            fontSize="5vmax"
+            fontSize="3vmax"
             sx={{ marginTop: "3vh", color: "#2A4759" }}
           >
-            Enjoy the predictions
+            Predict Colors.
           </Typography>
           <Typography
             component="h1"
             variant="h4"
-            fontSize="3vmax"
+            fontSize="2vmax"
             sx={{ color: "#2A4759" }}
           >
             Play for fun.
@@ -281,14 +281,7 @@ export default function LoginPage() {
               }}
               sx={{ mb: 2 }}
             />
-
-            {/* Forgot Password Link */}
-            <Box sx={{ textAlign: "right", mb: 3 }}>
-              <NavLink to="/forgotpassword" style={{ textDecoration: "none" }}>
-                Forgot Password?
-              </NavLink>
-            </Box>
-
+            
             {/* Login Button */}
             <Button
               type="submit"

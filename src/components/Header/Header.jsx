@@ -145,6 +145,11 @@ function ResponsiveAppBar() {
             component="a"
             href="/"
             sx={{
+              background: "linear-gradient(270deg, #ff0000, #8a2be2, #00ff66)",
+              backgroundSize: "600% 600%",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              animation: `${wave} 6s ease infinite`,
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,

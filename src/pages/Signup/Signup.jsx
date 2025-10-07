@@ -232,15 +232,15 @@ export default function SignUpPage() {
           <Typography
             component="h1"
             variant="h4"
-            fontSize="5vmax"
+            fontSize="3vmax"
             sx={{ marginTop: "3vh", color: "#2A4759" }}
           >
-            Enjoy the predictions.
+            Predict Colors.
           </Typography>
           <Typography
             component="h1"
             variant="h4"
-            fontSize="3vmax"
+            fontSize="2vmax"
             sx={{ color: "#2A4759" }}
           >
             Play for fun.

@@ -64,18 +64,15 @@ const Footer = () => {
           <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" sx={{ mb: 1 }}>
             <AgeRestrictionIcon />
             <Typography variant="caption" sx={{ color: '#ff5722', fontWeight: 'bold' }}>
-              RESPONSIBLE GAMING
+              Play Responsibly 
             </Typography>
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 0.5, sm: 2 }} justifyContent="center">
             <Typography variant="caption" sx={{ color: '#ffa726' }}>
-              • Gambling can be addictive - Play responsibly
+              • Gaming can be addictive - Play responsibly
             </Typography>
             <Typography variant="caption" sx={{ color: '#ffa726' }}>
-              • Set limits and stick to them
-            </Typography>
-            <Typography variant="caption" sx={{ color: '#ffa726' }}>
-              • Never bet more than you can afford to lose
+              • Set time limits and stick to them
             </Typography>
           </Stack>
         </Box>
